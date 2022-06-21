@@ -1,0 +1,17 @@
+[
+    {
+        "server": "https://bryanwills.xyz",
+        "project_name": "bryanwills.xyz",
+        "send_sms_alert": true,
+        "manager": {
+            "name": "bryan wills",
+            "email": "bryanwi09@gmail.com",
+            "number": "5029213921"
+        },
+        "lead": {
+            "name": "bryan wills",
+            "email": "engbryanwills@gmail.com",
+            "number": "5029213921"
+        }
+    }
+]
