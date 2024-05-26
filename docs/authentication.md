@@ -6,11 +6,15 @@
   - [Logging In and Out](#logging-in-and-out)
   - [Guest Access](#enabling-guest-access)
   - [Per-User Access](#granular-access)
+  - [Using Environment Variables for Passwords](#using-environment-variables-for-passwords)
+  - [Adding HTTP Auth to Configuration](#adding-http-auth-to-configuration)
   - [Security Considerations](#security)
+- [HTTP Auth](#http-auth)
 - [Keycloak Auth](#keycloak)
   - [Deploying Keycloak](#1-deploy-keycloak)
   - [Setting up Keycloak](#2-setup-keycloak-users)
   - [Configuring Dashy for Keycloak](#3-enable-keycloak-in-dashy-config-file)
+  - [Toubleshooting Keycloak](#troubleshooting-keycloak)
 - [Alternative Authentication Methods](#alternative-authentication-methods)
   - [VPN](#vpn)
   - [IP-Based Access](#ip-based-access)
@@ -20,13 +24,18 @@
 
 
 > [!IMPORTANT]
-> Dashy's built-in auth is not indented to protect a publicly hosted instance against unauthorized access. Instead you should use an auth provider compatible with your reverse proxy, or access Dashy via your VPN. 
+> Dashy's built-in auth is not indented to protect a publicly hosted instance against unauthorized access. Instead you should use an auth provider compatible with your reverse proxy, or access Dashy via your VPN, or implement your own SSO logic. 
 >
 > In cases where Dashy is only accessibly within your home network, and you just want to add a login page, then the built-in auth may be sufficient, but keep in mind that configuration can still be accessed.
 
 ## Built-In Auth
 
 Dashy has a basic login page included, and frontend authentication. You can enable this by adding users to the `auth` section under `appConfig` in your `conf.yml`. If this section is not specified, then no authentication will be required to access the app, and the homepage will resolve to your dashboard.
+
+> [!NOTE]
+> Since the auth is initiated in the main app entry point (for security), a rebuild is required to apply changes to the auth configuration.
+> You can trigger a rebuild through the UI, under Config --> Rebuild, or by running `yarn build` in the root directory.
+
 
 ### Setting Up Authentication
 
@@ -110,9 +119,40 @@ You can also prevent any user from writing changes to disk, using `preventWriteT
 
 To disable all UI config features, including View Config, set `disableConfiguration`. Alternatively you can disable UI config features for all non admin users by setting `disableConfigurationForNonAdmin` to true.
 
+### Using Environment Variables for Passwords
+
+If you don't want to hash your password, you can instead leave out the `hash` attribute, and replace it with `password` which should have the value of an environmental variable name you wish to use.
+
+Note that env var must begin with `VUE_APP_`, and you must set this variable before building the app.
+
+For example:
+
+```yaml
+  auth:
+    users:
+    - user: bob
+      password: VUE_APP_BOB
+```
+
+Just be sure to set `VUE_APP_BOB='my super secret password'` before build-time.
+
+### Adding HTTP Auth to Configuration
+
+If you'd also like to prevent direct visit access to your configuration file, you can set the `ENABLE_HTTP_AUTH` environmental variable.
+
 ### Security
 
 With basic auth, all logic is happening on the client-side, which could mean a skilled user could manipulate the code to view parts of your configuration, including the hash. If the SHA-256 hash is of a common password, it may be possible to determine it, using a lookup table, in order to find the original password. Which can be used to manually generate the auth token, that can then be inserted into session storage, to become a valid logged in user. Therefore, you should always use a long, strong and unique password, and if you instance contains security-critical info and/ or is exposed directly to the internet, and alternative authentication method may be better. The purpose of the login page is merely to prevent immediate unauthorized access to your homepage.
+
+**[⬆️ Back to Top](#top)**
+
+---
+
+## HTTP Auth
+
+If you'd like to protect all your config files from direct access, you can set the `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` environmental variables. You'll then be prompted to enter these credentials when visiting Dashy.
+
+Then, if you'd like your frontend to automatically log you in, without prompting you for credentials, then also specify `VUE_APP_BASIC_AUTH_USERNAME` and `VUE_APP_BASIC_AUTH_PASSWORD`. This is useful for when you're hosting Dashy on a private server, and you want to prevent unauthorized access to your config files, while still allowing the frontend to access them. Note that a rebuild is required for these changes to take effect.
 
 **[⬆️ Back to Top](#top)**
 
@@ -214,6 +254,67 @@ From within the Keycloak console, you can then configure things like time-outs, 
 
 ---
 
+### Troubleshooting Keycloak
+
+If you encounter issues with your Keycloak setup, follow these steps to troubleshoot and resolve common problems.
+
+1. Client Authentication Issue
+Problem: Redirect loop, if client authentication is enabled.
+Solution: Switch off "client authentication" in "TC clients" -> "Advanced" settings.
+
+2. Double URL
+Problem: If you get redirected to "https://dashy.my.domain/#iss=https://keycloak.my.domain/realms/my-realm"
+Solution: Make sure to turn on "Exclude Issuer From Authentication Response" in "TC clients" -> "Advanced" -> "OpenID Connect Compatibility Modes"
+
+3. Problems with mutiple Dashy Pages
+Problem: Refreshing or logging out of dashy results in an "invalid_redirect_uri" error.
+Solution: In "TC clients" -> "Access settings" -> "Root URL" https://dashy.my.domain/, valid redirect URIs must be /*
+
+---
+
+## OIDC
+
+Dashy also supports using a general [OIDC compatible](https://openid.net/connect/) authentication server. In order to use it, the authentication section needs to be configured:
+
+```yaml
+appConfig:
+  auth:
+    enableOidc: true
+    oidc:
+      clientId: [registered client id]
+      endpoint: [OIDC endpoint]
+```
+
+Because Dashy is a SPA, a [public client](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1) registration with PKCE is needed.
+
+An example for Authelia is shared below, but other OIDC systems can be used:
+
+```yaml
+identity_providers:
+  oidc:
+    clients:
+      - client_id: dashy
+        client_name: dashy
+        public: true
+        authorization_policy: 'one_factor'
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - https://dashy.local # should point to your dashy endpoint
+        grant_types:
+          - authorization_code
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'roles'
+          - 'email'
+          - 'groups'
+```
+
+Groups and roles will be populated and available for controlling display similar to [Keycloak](#Keycloak) abvoe.
+
+---
+
 ## Alternative Authentication Methods
 
 If you are self-hosting Dashy, and require secure authentication to prevent unauthorized access, then you can either use Keycloak, or one of the following options:
@@ -263,7 +364,7 @@ In NGINX you can specify [control access](https://docs.nginx.com/nginx/admin-gui
 
 ```text
 server {
-	listen 80;
+	listen 8080;
 	server_name www.dashy.example.com;
 	location / {
 		root /path/to/dashy/;
