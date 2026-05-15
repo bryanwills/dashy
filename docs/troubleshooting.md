@@ -175,7 +175,7 @@ docker compose up -d --force-recreate
 
 ### Intentionally read-only mode
 
-To stop anyone saving from the UI, set `appConfig.preventWriteToDisk: true` in `conf.yml`. This disables the endpoint and the save button. For Docker users, you can harden things further, by mounting the config and all user-data as read-only.
+To hide the "Save to disk" UI for everyone, set `appConfig.preventWriteToDisk: true` in `conf.yml`. This is a UI-only flag — the `/config-manager/save` server endpoint itself is gated by the configured auth method (`auth.users` with `ENABLE_HTTP_AUTH`, OIDC/Keycloak admin role, header-auth, etc.), so anyone unauthenticated or non-admin already can't save regardless of this flag. For Docker users, you can harden things further by mounting `user-data` (or just `conf.yml`) as read-only — the kernel will refuse the write even before the server tries.
 
 ---
 
