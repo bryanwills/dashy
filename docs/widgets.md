@@ -160,10 +160,11 @@ A simple, live-updating local weather component, showing temperature, conditions
 --- | --- | --- | ---
 **`apiKey`** | `string` |  Required | Your OpenWeatherMap API key. You can get one for free at [openweathermap.org](https://openweathermap.org/)
 **`city`** | `string` | Required | A city name to use for fetching weather. This can also be a state code or country code, following the ISO-3166 format
+**`cityId`** | `number` |  _Optional_ | An OpenWeatherMap numeric city ID, used to disambiguate cities that share a name. You can find the ID in the URL of the city's page on [openweathermap.org](https://openweathermap.org/) (e.g. `2643743` for London, GB). If provided, this will override the `city` option
 **`units`** | `string` |  _Optional_ | The units to use for displaying data, can be either `metric` or `imperial`. Defaults to `metric`
 **`hideDetails`** | `boolean` |  _Optional_ | If set to `true`, the additional details (wind, humidity, pressure, etc) will not be shown. Defaults to `false`
-**`lat`** | `number` |  _Optional_ | To show weather for a specific location, you can provide the latitude and longitude coordinates. If provided, this will override the `city` option
-**`lon`** | `number` |  _Optional_ | To show weather for a specific location, you can provide the latitude and longitude coordinates. If provided, this will override the `city` option
+**`lat`** | `number` |  _Optional_ | To show weather for a specific location, you can provide the latitude and longitude coordinates. If provided, this will override the `city` and `cityId` options
+**`lon`** | `number` |  _Optional_ | To show weather for a specific location, you can provide the latitude and longitude coordinates. If provided, this will override the `city` and `cityId` options
 
 #### Example
 
@@ -197,6 +198,9 @@ Displays the weather (temperature and conditions) for the next few days for a gi
 --- | --- | --- | ---
 **`apiKey`** | `string` |  Required | Your OpenWeatherMap API key. You can get one at [openweathermap.org](https://openweathermap.org/) or for free via the [OWM Student Plan](https://home.openweathermap.org/students)
 **`city`** | `string` | Required | A city name to use for fetching weather. This can also be a state code or country code, following the ISO-3166 format
+**`cityId`** | `number` |  _Optional_ | An OpenWeatherMap numeric city ID, used to disambiguate cities that share a name. You can find the ID in the URL of the city's page on [openweathermap.org](https://openweathermap.org/) (e.g. `2643743` for London, GB). If provided, this will override the `city` option
+**`lat`** | `number` |  _Optional_ | Latitude for a specific location. If provided alongside `lon`, this will override the `city` and `cityId` options
+**`lon`** | `number` |  _Optional_ | Longitude for a specific location. If provided alongside `lat`, this will override the `city` and `cityId` options
 **`numDays`** | `number` |  _Optional_ | The number of days to display of forecast info to display. Defaults to `4`, max `16` days
 **`units`** | `string` |  _Optional_ | The units to use for displaying data, can be either `metric` or `imperial`. Defaults to `metric`
 **`hideDetails`** | `boolean` |  _Optional_ | If set to `true`, the additional details (wind, humidity, pressure, etc) will not be shown. Defaults to `false`

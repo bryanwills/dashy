@@ -79,6 +79,25 @@ If you are not comfortable with making pull requests, or do not want to modify t
 
 ---
 
+## Checking Translation Coverage
+
+We've got a short test/lint script for verifying translation files are complete and valid, and to show per-language coverage report.
+
+```bash
+yarn validate-locales
+```
+
+This will run the following checks:
+- Ensure all locale files are registered, present and parsable (failure)
+- Non-existing translations used in the code, not present in en.json (failure)
+- Translations in en.json never used anywhere in the code (warn)
+- Translations in other locales not used in en.json or code (warn)
+- Missing translations in other locales compared to en.json (coverage report)
+
+This script is located in [`tests/locales/check-locales.js`](https://github.com/lissy93/dashy/blob/master/tests/locales/check-locales.js), and can be executed directly, or with `yarn validate-locales` and is also run as part of the CI workflow on PRs.
+
+---
+
 ## Adding New Text to a Component
 
 If you're working on a new component, then any text that is displayed to the user should be extracted out of the component, and stored in the file. This also applies to any existing components, that might have been forgotten to be translated. Thankfully, everything is already setup, so this is a pretty easy job.
