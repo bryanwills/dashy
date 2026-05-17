@@ -66,6 +66,7 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Nextcloud System](#nextcloud-system)
   - [Nextcloud Stats](#nextcloud-stats)
   - [Nextcloud PHP OPcache](#nextcloud-php-opcache-stats)
+  - [Ntfy stream](#ntfy-stream)
   - [Proxmox lists](#proxmox-lists)
   - [Sabnzbd](#sabnzbd)
   - [Gluetun VPN Info](#gluetun-vpn-info)
@@ -2435,6 +2436,40 @@ Shows statistics about PHP OPcache performance on your Nextcloud server.
 - **Price**: 🟢 Free
 - **Host**: Self-Hosted (see [Nextcloud](https://nextcloud.com))
 - **Privacy**: _See [Nextcloud Privacy Policy](https://nextcloud.com/privacy)_
+
+---
+
+### ntfy stream
+
+Subscribes to topics on a **private** [ntfy](https://docs.ntfy.sh/) server, and shows **new messages** as they arrive.
+
+#### Options
+
+**Field** | **Type** | **Required** | **Description**
+--- | --- | --- | ---
+**`server_url`** | `string` |  Required | The server url
+**`topic`** | `string` |  Required | A topic, or a comma separated list of topics
+**`auth`** | `string` |  optional | An [auth string](https://docs.ntfy.sh/subscribe/api/#authentication). ⚠️ This is sent as query parameter.
+**`title`** | `string` |  optional | A title for the widget.
+
+#### Example
+
+```yaml
+- type: ntfy-stream
+  useProxy: false
+  options:
+    title: NTFY stream
+    server_url: https://myntfy.server.tld
+    topic: alert,warning,mytopic
+```
+
+#### Info
+
+- **CORS**: Disabled
+- **Auth**: Optional
+- **Price**: Free
+- **Host**: [Self-hosted](https://docs.ntfy.sh/install/)
+- **Privacy**: [ntfy Privacy Policy](https://docs.ntfy.sh/privacy/)
 
 ---
 
