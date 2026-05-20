@@ -53,6 +53,10 @@
   - [Sign-out leaves you stuck on Authentik](#sign-out-leaves-you-stuck-on-authentik)
   - [Untrusted certificate from Authentik](#untrusted-certificate-from-authentik)
   - [Numeric client_id getting truncated](#numeric-client_id-getting-truncated)
+  - [Header auth: "not from trusted proxy"](#header-auth-unauthorized---not-from-trusted-proxy)
+  - [Header auth: "missing user header"](#header-auth-unauthorized---missing-user-header)
+  - [Invalid user object with all-digit hash](#invalid-user-object-warning-on-startup-with-an-all-digit-hash-or-placeholder)
+  - [OIDC login fails with CORS-shaped error from untrusted cert](#oidc-login-looks-like-a-cors-error-in-devtools-but-the-idp-is-configured-for-cors-correctly)
 - [Docker & image issues](#docker--image-issues)
   - [App Not Starting After Update to 2.0.4](#app-not-starting-after-update-to-204)
   - [Mount Type Mismatch](#mount-type-mismatch)
@@ -541,6 +545,18 @@ Self-signed certs make Dashy's server-side fetch of the discovery document fail.
 
 ### Numeric client_id getting truncated
 Don't use numeric-only client IDs. If you must, wrap the value in quotes in conf.yml so YAML treats it as a string
+
+### Header auth: "Unauthorized - not from trusted proxy"
+The IP your reverse proxy presents as isn't in `auth.headerAuth.proxyWhitelist`. For Docker it's usually the bridge IP, not your LAN IP. Find it with `docker compose exec dashy getent hosts <proxy-service-name>` and paste that into `proxyWhitelist`. Restart Dashy after the change.
+
+### Header auth: "Unauthorized - missing user header"
+The source IP check passed, but the configured `userHeader` isn't on the request. Either the proxy isn't sending it (check the Cloudflare Access policy / Authelia forward-auth / Tailscale Serve config is actually applied), or the header name in `conf.yml` doesn't match what the proxy sends. Header matching is case-insensitive, but spelling and prefix matter.
+
+### "Invalid user object" warning on startup with an all-digit hash or placeholder
+YAML parsed your `hash:` value as a number rather than a string, because every character was a digit. Common when using placeholder all-zero hashes under header auth. Quote it: `hash: "0000..."`. Same root cause as the numeric `clientId` issue above.
+
+### OIDC login looks like a CORS error in devtools, but the IdP is configured for CORS correctly
+If your identity provider uses a self-signed or untrusted certificate, the browser will silently abort `oidc-client-ts`'s token-exchange fetch and surface it as a CORS-shaped error. Open the IdP URL directly in a new tab, accept the certificate warning, then retry the Dashy login. The real fix is to use a trusted cert (Let's Encrypt, or a homelab CA installed into the browser's trust store).
 
 ---
 
