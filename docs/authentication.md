@@ -272,6 +272,8 @@ volumes:
   keycloak-data:
 ```
 
+</details>
+
 You should now be able to access the Keycloak web interface at `http://127.0.0.1:9100`, log in with your admin credentials above, and create a new password when prompted.
 
 ### 2. Setup Keycloak Users

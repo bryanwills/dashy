@@ -1,4 +1,4 @@
-# Authelia Authentication for Dashy
+# Authelia
 
 Dashy supports using [Authelia](https://www.authelia.com/) as its OIDC provider.
 
@@ -46,6 +46,8 @@ services:
       timeout: 5s
       retries: 10
 ```
+
+</details>
 
 The `config/` directory holds Authelia's `configuration.yml`, the user database, the OIDC signing key, and (for local testing) the TLS cert. Generate them in step 2.
 
@@ -369,7 +371,9 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 
 ### Visual Overview
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -410,7 +414,11 @@ sequenceDiagram
     end
 ```
 
-### Server-side request handling
+</details>
+
+<details>
+
+<summary>Server-side request handling</summary>
 
 ```mermaid
 flowchart TD
@@ -439,3 +447,5 @@ flowchart TD
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
     classDef neutral fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
+
+</details>

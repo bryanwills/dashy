@@ -1,4 +1,4 @@
-# Tailscale (and Headscale) for Dashy
+# Tailscale
 
 [Tailscale](https://tailscale.com/) is a popular way to put Dashy on a private network you can reach from your phone, laptop, or any other device you've added to your tailnet, without exposing it to the public internet. With Tailscale Serve in front, requests reaching Dashy already carry the user's identity in HTTP headers, which plugs straight into Dashy's header auth for auto-login.
 
@@ -103,6 +103,8 @@ services:
       retries: 10
       start_period: 30s
 ```
+
+</details>
 
 `.env` next to the compose:
 
@@ -305,7 +307,9 @@ flowchart LR
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
 ```
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -330,3 +334,5 @@ sequenceDiagram
     Dashy-->>Device: { user: "alice@example.com" }
     Device->>Device: Match email to users[], set cookie,<br />render dashboard with right admin level
 ```
+
+</details>

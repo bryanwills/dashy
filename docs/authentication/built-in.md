@@ -350,3 +350,5 @@ sequenceDiagram
     Browser->>Dashy: GET /system-info<br />Authorization Bearer header set from cookie
     Dashy-->>Browser: 200 + system info
 ```
+
+</details>

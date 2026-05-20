@@ -1,4 +1,4 @@
-# Cloudflare Tunnel + Access for Dashy
+# Cloudflare Tunnel
 
 Dashy works well behind [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/) doing auth at the edge. This is one of the most common ways to expose a homelab dashboard to the public internet without opening any inbound ports, without managing TLS, and without standing up your own identity provider.
 
@@ -101,6 +101,8 @@ services:
       retries: 10
       start_period: 30s
 ```
+
+</details>
 
 Set the token via env or a `.env` file alongside the compose:
 
@@ -244,7 +246,9 @@ flowchart LR
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
 ```
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -280,3 +284,5 @@ sequenceDiagram
     Dashy-->>Browser: { user: "alice@example.com" }
     Browser->>Browser: Match email to users[], set cookie,<br />render dashboard with right admin level
 ```
+
+</details>

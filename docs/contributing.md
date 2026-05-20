@@ -25,15 +25,17 @@ Don't feel any pressure to donate anything, as Dashy and my other projects will 
 
 Sponsoring will give you several perks - for $1 / £0.75 per month, you'll get a sponsor badge on your profile, be credited on the Dashy's readme, with a link to your website/ profile/ socials, get priority support,  have your feature ideas implemented, plus lots more. For more info, see [@Lissy93's Sponsor Page](https://github.com/sponsors/Lissy93).
 
-### You can also send a one-off small contribution using crypto
-
-[![Donate with BTC](https://en.cryptobadges.io/badge/big/3853bSxupMjvxEYfwGDGAaLZhTKxB2vEVC)](https://en.cryptobadges.io/donate/3853bSxupMjvxEYfwGDGAaLZhTKxB2vEVC)[![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0x0fc98cBf8bea932B4470C46C0FbE1ed1f6765017)](https://en.cryptobadges.io/donate/0x0fc98cBf8bea932B4470C46C0FbE1ed1f6765017)
+<details>
+	<summary>You can also send a one-off small contribution using crypto</summary>
+	[![Donate with BTC](https://en.cryptobadges.io/badge/big/3853bSxupMjvxEYfwGDGAaLZhTKxB2vEVC)](https://en.cryptobadges.io/donate/3853bSxupMjvxEYfwGDGAaLZhTKxB2vEVC)[![Donate with Ethereum](https://en.cryptobadges.io/badge/big/0x0fc98cBf8bea932B4470C46C0FbE1ed1f6765017)](https://en.cryptobadges.io/donate/0x0fc98cBf8bea932B4470C46C0FbE1ed1f6765017)
 
 - **BTC**: `3853bSxupMjvxEYfwGDGAaLZhTKxB2vEVC`
 - **ETH**: `0x0fc98cBf8bea932B4470C46C0FbE1ed1f6765017` / `aliciasykes.eth`
 - **XMR**: `471KZdxb6N63aABR4WYwMRjTVkc1p1x7wGsUTEF7AMYzL8L94A5pCuYWkosgJQ5Ze8Y2PscVCGZFJa3hDPg6MaDq47GUm8r`
 - **LTC**: `MAuck6Ea1qaNihwKfXutkR1R6BorMth86H`
 - **ZEC**: `t1bw1SefijsXRDQVxC9w64XsRK8hBhtQohQ`
+
+</details>
 
 ## Enable Anonymous Bug Reports
 

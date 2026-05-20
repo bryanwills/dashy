@@ -1,4 +1,4 @@
-# Pocket ID Authentication for Dashy
+# Pocket ID
 
 Dashy supports using [Pocket ID](https://pocket-id.org/) as its OIDC provider.
 
@@ -51,6 +51,8 @@ services:
       retries: 10
       start_period: 30s
 ```
+
+</details>
 
 A few things worth understanding before you start:
 
@@ -287,7 +289,9 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 
 ### Visual Overview
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -328,7 +332,11 @@ sequenceDiagram
     end
 ```
 
-### Server-side request handling
+</details>
+
+<details>
+
+<summary>Server-side request handling</summary>
 
 ```mermaid
 flowchart TD
@@ -357,3 +365,5 @@ flowchart TD
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
     classDef neutral fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
+
+</details>

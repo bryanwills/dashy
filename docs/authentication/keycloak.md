@@ -1,4 +1,4 @@
-# Keycloak Authentication for Dashy
+# Keycloak
 
 Dashy supports using a [Keycloak](https://www.keycloak.org/) (V17+) authentication server.
 
@@ -87,6 +87,8 @@ services:
 volumes:
   keycloak-data:
 ```
+
+</details>
 
 You should now be able to access the Keycloak web interface at `http://127.0.0.1:9100`, log in with your admin credentials above, and create a new password when prompted.
 
@@ -395,7 +397,9 @@ The server's admin check reads from the `id_token` only. Keycloak's default mapp
 
 ### Visual Overview
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -436,7 +440,11 @@ sequenceDiagram
     end
 ```
 
-### Server-side request handling
+</details>
+
+<details>
+
+<summary>Server-side request handling</summary>
 
 ```mermaid
 flowchart TD
@@ -465,3 +473,5 @@ flowchart TD
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
     classDef neutral fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
+
+</details>

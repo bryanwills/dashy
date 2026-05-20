@@ -1,4 +1,4 @@
-# Zitadel Authentication for Dashy
+# Zitadel
 
 Dashy supports using [Zitadel](https://zitadel.com/) as its OIDC provider.
 
@@ -85,6 +85,8 @@ services:
       postgres:
         condition: service_healthy
 ```
+
+</details>
 
 The Zitadel external domain (`zitadel.lvh.me` above) must resolve to the host Zitadel listens on. `lvh.me` and its subdomains resolve to `127.0.0.1` everywhere, so no /etc/hosts edits needed locally.
 
@@ -365,7 +367,9 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 
 ### Visual Overview
 
-### End-to-end authentication flow
+<details>
+
+<summary>End-to-end authentication flow</summary>
 
 ```mermaid
 sequenceDiagram
@@ -407,7 +411,11 @@ sequenceDiagram
     end
 ```
 
-### Server-side request handling
+</details>
+
+<details>
+
+<summary>Server-side request handling</summary>
 
 ```mermaid
 flowchart TD
@@ -436,3 +444,5 @@ flowchart TD
     classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
     classDef neutral fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
 ```
+
+</details>
