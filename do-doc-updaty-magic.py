@@ -71,10 +71,6 @@ def fix_markdown_file(filepath):
     content = re.sub(r'\[!\[Stargazers\].*?starchart\.cc.*?\)', '', content, flags=re.DOTALL)
     content = re.sub(r'\[!\[Contributors\].*?contrib\.rocks.*?\)', '', content, flags=re.DOTALL)
 
-    # Remove details tags, convert to headings
-    content = re.sub(r'<details[^>]*>\s*<summary>([^<]+)</summary>\s*', r'### \1\n\n', content)
-    content = re.sub(r'</details>', '', content)
-
     # Back to top links
     content = re.sub(r'\[⬆️ Back to Top\]\([^)]*\)', '**[⬆️ Back to Top](#)**', content)
     content = re.sub(r'<p[^>]*>\s*<a[^>]*>⬆️ Back to Top</a>\s*</p>', '**[⬆️ Back to Top](#)**', content)
