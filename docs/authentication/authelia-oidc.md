@@ -1,4 +1,4 @@
-# Authelia
+# Authelia Authentication for Dashy
 
 Dashy supports using [Authelia](https://www.authelia.com/) as its OIDC provider.
 

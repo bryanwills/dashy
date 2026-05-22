@@ -1,4 +1,4 @@
-# Zitadel
+# Zitadel Authentication for Dashy
 
 Dashy supports using [Zitadel](https://zitadel.com/) as its OIDC provider.
 

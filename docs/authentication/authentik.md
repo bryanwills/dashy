@@ -1,4 +1,4 @@
-# Authentik
+# Authentik Authentication for Dashy
 
 Dashy supports using [Authentik](https://goauthentik.io/) as its OIDC provider.
 

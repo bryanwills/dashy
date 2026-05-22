@@ -1,4 +1,4 @@
-# Cloudflare Tunnel
+# Cloudflare Tunnel + Access for Dashy
 
 Dashy works well behind [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/) doing auth at the edge. This is one of the most common ways to expose a homelab dashboard to the public internet without opening any inbound ports, without managing TLS, and without standing up your own identity provider.
 

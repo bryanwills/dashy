@@ -1,4 +1,4 @@
-# Keycloak
+# Keycloak Authentication for Dashy
 
 Dashy supports using a [Keycloak](https://www.keycloak.org/) (V17+) authentication server.
 
