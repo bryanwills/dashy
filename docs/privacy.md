@@ -204,7 +204,7 @@ Dashy supports [Widgets](/docs/widgets) for displaying dynamic content. Below is
 | [Astronomy Picture of the Day](/docs/widgets#astronomy-picture-of-the-day) | `https://apod.as93.net` | [NASA's Privacy Policy](https://www.nasa.gov/about/highlights/HP_Privacy.html) |
 | [GitHub Trending](/docs/widgets#github-trending) | `https://trend.doforce.xyz` | No Policy Available |
 | [GitHub Profile Stats](/docs/widgets#github-profile-stats) | `https://github-readme-stats.vercel.app` | [GitHub's Privacy Policy](https://docs.github.com/en/github/site-policy/github-privacy-statement) |
-| [Cron Monitoring (Health Checks)](/docs/widgets#cron-monitoring-health-checks) | `https://healthchecks.io` | [Health-Checks Privacy Policy](https://healthchecks.io/privacy/) |
+| [Healthchecks Status](/docs/widgets#healthchecks-status) | `https://healthchecks.io` | [Health-Checks Privacy Policy](https://healthchecks.io/privacy/) |
 | [Hacker News Trending](/docs/widgets#hacker-news-trending) | `https://hacker-news.firebaseio.com` | [Y Combinator Privacy Policy](https://www.ycombinator.com/legal#privacy) |
 | [Minecraft Server Status](/docs/widgets#minecraft-server-status) | `https://api.mcsrvstat.us` | No Policy Available |
 | [MVG](/docs/widgets#mvg) | `https://www.mvg.de/api/fib/v2/` | No Policy Available |

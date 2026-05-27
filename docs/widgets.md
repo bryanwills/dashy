@@ -44,7 +44,6 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Minecraft Server](#minecraft-server)
 - **[Self-Hosted Services Widgets](#self-hosted-services-widgets)**
   - [System Info](#system-info)
-  - [Cron Monitoring](#cron-monitoring-health-checks)
   - [CPU History](#cpu-history-netdata)
   - [Memory History](#memory-history-netdata)
   - [System Load History](#load-history-netdata)
@@ -1226,19 +1225,21 @@ Display stats from your GitHub profile, using embedded cards from [anuraghazra/g
 
 ### HealthChecks Status
 
-Display status of one or more HealthChecks project(s). Works with healthchecks.io and your selfhosted instance.
+Display cron job monitor status of one or more HealthChecks project(s). Works with healthchecks.io and your selfhosted instance.
 
-<p align="center"><img width="380" src="https://pixelflare.cc/alicia/dashy/healthchecks" /></p>
+<p align="center"><img width="400" src="https://pixelflare.cc/alicia/dashy/cron-monitor" /></p>
 
 #### Options
 
 **Field** | **Type** | **Required** | **Description**
 --- | --- | --- | ---
 **`host`** | `string` |  Optional | The base url of your instance, default is `https://healthchecks.io`
-**`apiKey`** | `string` or `array` |  Required | One or more API keys for your healthcheck projects. (Read-only works fine)
+**`apiKey`** | `string` (or `string[]` for multiple) |  Required | API key(s) for project(s) to monitor. Generate a separate key per project (read-only is fine), under Project --> Settings --> API Access
+
+##### Example
 
 ```yaml
-- type: HealthChecks
+- type: health-checks
   options:
     host: https://healthcheck.your-domain.de
     apiKey: 
@@ -1246,9 +1247,17 @@ Display status of one or more HealthChecks project(s). Works with healthchecks.i
       - zxywvu...
 ```
 
+Or, a single project:
+```yaml
+      - type: health-checks
+        options:
+          host: https://healthchecks.io
+          apiKey: hcw_xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
 #### Info
 
-- **CORS**: 🟢 Enabled
+- **CORS**: 🟠 Proxied
 - **Auth**: 🟢 Required
 - **Price**: 🟢 Free / Paid / Self-hosted 
 - **Host**: Managed Instance or Self-Hosted (see [healthchecks/healthchecks](https://github.com/healthchecks/healthchecks))
@@ -1654,37 +1663,6 @@ _No config options._
 No external data requests made
 
 Note that this widget is not available if you are running Dashy in a container or VM. Instead you can use the [System Monitoring](#system-resource-monitoring) widgets to display stats from the host system instead.
-
----
-
-### Cron Monitoring (Health Checks)
-
-Cron job monitoring using [Health Checks](https://github.com/healthchecks/healthchecks). Both managed and self-hosted instances are supported.
-
-<p align="center"><img width="400" src="https://pixelflare.cc/alicia/dashy/cron-monitor" /></p>
-
-#### Options
-
-**Field** | **Type** | **Required** | **Description**
---- | --- | --- | ---
-**`apiKey`** | `string` |  Required | A read-only API key for the project to monitor. You can generate this by selecting a Project --> Settings --> API Access. Note that you must generate a separate key for each project
-**`host`** | `string` | _Optional_ | If you're self-hosting, or using any instance other than the official (healthchecks.io), you will need to specify the host address. E.g. `https://healthchecks.example.com` or `http://cron-monitoing.local`
-
-#### Example
-
-```yaml
-- type: health-checks
-  options:
-    apiKey: XXXXXXXXX
-```
-
-#### Info
-
-- **CORS**: 🟢 Enabled
-- **Auth**: 🔴 Required
-- **Price**: 🟠 Free plan (up to 20 services, or self-host for unlimited)
-- **Host**: Managed Instance or Self-Hosted (see [GitHub - HealthChecks](https://github.com/healthchecks/healthchecks))
-- **Privacy**: _See [Health-Checks Privacy Policy](https://healthchecks.io/privacy/)_
 
 ---
 
