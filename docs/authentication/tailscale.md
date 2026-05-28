@@ -1,4 +1,4 @@
-# Tailscale (and Headscale) for Dashy
+# Tailscale
 
 [Tailscale](https://tailscale.com/) is a popular way to put Dashy on a private network you can reach from your phone, laptop, or any other device you've added to your tailnet, without exposing it to the public internet. With Tailscale Serve in front, requests reaching Dashy already carry the user's identity in HTTP headers, which plugs straight into Dashy's header auth for auto-login.
 

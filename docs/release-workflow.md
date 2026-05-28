@@ -1,175 +1,180 @@
 # Releases and Workflows
 
-- [Release Schedule](#release-schedule)
-- [Deployment Process](#deployment-process)
+> This document outlines our release schedule, workflows/automations, repository conventions and standards
+
+- [Versioning and Releases](#versioning-and-releases)
+  - [High-level tag process](#high-level-tag-process)
+  - [Creating a Release](#creating-a-release)
+  - [Versioning](#versioning)
+- [Workflows](#workflows)
+  - [CI](#ci)
+  - [Docker](#docker)
+  - [Release](#release)
+  - [Tag](#tag)
+  - [Mirror](#mirror)
+  - [Docs](#docs)
 - [Git Strategy](#git-strategy)
-- [Automated Workflows](#automated-workflows)
-- [Release Pipeline](#release-pipeline)
-
-## Release Schedule
-
-We're using [Semantic Versioning](https://semver.org/), to indicate major, minor and patch versions. You can find the current version number in the readme, and check your apps version under the config menu. The version number is pulled from the [package.json](https://github.com/Lissy93/dashy/blob/master/package.json#l3) file.
-
-Typically there is a new major release every 2 weeks, usually on Sunday, and you can view these under the [Releases Page](https://github.com/Lissy93/dashy/releases). Each new version will also have a corresponding [tag on GitHub](https://github.com/Lissy93/dashy/tags), and each major release will also result in the creation of a new [tag on DockerHub](https://hub.docker.com/r/lissy93/dashy/tags), so that you can fix your container to a certain version.
-
-For a full breakdown of each change, you can view the [Updates Page](https://dashy.to/updates/). Each new feature or significant change needs to be submitted through a pull request, which makes it easy to review and track these changes, and roll back if needed.
+  - [Commits](#commits)
+  - [Branches](#branches)
+  - [Pull Requests](#pull-requests)
 
 ---
 
-## Deployment Process
+## Versioning and Releases
 
-All changes and new features are submitted as pull requests, which can then be tested, reviewed and (hopefully) merged into the master branch. Every time there is a change in the major version number, a new release is published. This usually happens every 2 weeks, on a Sunday.
+### High-level tag process
+- All new features, fixes and updates happen via pull request to `master`
+- After a PR is merged, the `version` in the package.json will automatically be bumped by it's patch value (unless the PR already updated the version)
+- Whenever the `version` is updated, a new git tag and also Docker tag is created and pushed
+- If the major or minor version (not patch version) was bumped, then a release is also drafted
 
-When a PR is opened:
+The tagging process is managed via GitHub actions, using our [`tag.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/tag.yml) workflow.
+This workflow can also be manually triggered by a maintainer to make and push a new tag (either specify tag version, or leave blank for auto-bump of patch version).
 
-- A series of CI checks run against the new code (lint, test, build, Docker smoke test, security audit). The PR cannot be merged if any required check fails
-- If `yarn.lock` was modified, Liss-Bot adds a comment summarising which packages changed
+### Creating a Release
+Only repository maintainers can publish releases. The process typically happens automatically whenever the major or minor version is updated (via tag workflow). But a release can also be triggered manually via the [`release.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/release.yml) workflow's manual dispatch, by passing it an (already existing, not yet released) tag version. Note that the bot only creates a Draft Release, so you'll then need to head to the releases tab, review it looks correct, and hit Publish.
 
-After the PR is merged into master:
+### Versioning
 
-- If code files changed and the version in package.json wasn't already bumped, the patch version is auto-incremented and committed ([bump-and-tag.yml](https://github.com/Lissy93/dashy/blob/master/.github/workflows/bump-and-tag.yml))
-- A git tag is created and pushed for the new version
-- The tag push triggers Docker image builds for `linux/amd64`, `linux/arm64` and `linux/arm/v7`, published to both DockerHub and GHCR ([docker-build-publish.yml](https://github.com/Lissy93/dashy/blob/master/.github/workflows/docker-build-publish.yml))
-- If the tag is a major or minor version bump, a draft GitHub release is created with auto-generated release notes ([draft-release.yml](https://github.com/Lissy93/dashy/blob/master/.github/workflows/draft-release.yml)). Patch-only bumps skip the release
+Typically Dashy has multiple patch versions per week, bi-weekly minor releases, and quarterly major releases.
 
-Manual tagging is also available via the [manual-tag.yml](https://github.com/Lissy93/dashy/blob/master/.github/workflows/manual-tag.yml) workflow. You can either provide a specific version (e.g. `3.2.0`) or leave it empty to auto-bump the patch version. This is useful if the automated flow didn't trigger or you need to cut a release outside the normal PR flow.
+Dashy uses a form of semantic versioning ([semver](https://semver.org/)), whereby we push a:
+- Patch (e.g. `4.6.9`) - New patch version published for every change
+- Minor (e.g. `4.7.0`) - New minor version published for groups of features
+- Major (e.g. `5.0.0`) - Large releases, possibly not backward compatible
+
+<img width="500" src="https://pixelflare.cc/alicia/images/semver.png" />
+
+### Changelog
+You can view a list of recent changes at [dashy.to/updates](https://dashy.to/updates) or subscribe to the [`rss.xml`](https://dashy.to/rss.xml) feed.
+Likewise, on GitHub you can view all of our [Tags](https://github.com/lissy93/dashy/tags) and [Releases](https://github.com/lissy93/dashy/releases)
+
+---
+
+## Workflows
+
+### CI
+
+> Runs checks on pull request to catch obvious/critical issues
+
+This runs a series of checks against the PR. A path-filter step first works out what changed, so most checks only run when their relevant files were modified (the rest are skipped):
+
+- **Lint** - Confirms the code is clean and consistent, with ESLint
+  - _Runs when:_ source or config changes
+- **Typecheck** - Confirms TypeScript types are valid, with `vue-tsc`
+  - _Runs when:_ any code or config changes
+- **Test** - Runs the unit test suite
+  - _Runs when:_ every PR
+- **Locale check** - Validates the translation files are complete and well-formed
+  - _Runs when:_ any languages or locale content ([`src/assets/locales`](https://github.com/lissy93/dashy/blob/master/src/assets/locales/)) is updated
+- **Spellcheck** - Catches typos in the source strings ([`en.json`](https://github.com/lissy93/dashy/blob/master/src/assets/locales/en.json))
+  - _Runs when:_ English locale file is updated
+- **Build check** - Builds Dashy and checks the `dist` output is all good
+  - _Runs when:_ every PR
+- **Docker smoke test** - Builds the Docker image and checks it starts and serves correctly
+  - _Runs when:_ every PR
+- **Dependency audit** - Scans dependency changes for known vulnerabilities (fails on moderate+)
+  - _Runs when:_ Package is added/updated in [`yarn.lock`](https://github.com/lissy93/dashy/blob/master/yarn.lock)
+- **Secret scanning** - Scans the PR diff for committed secrets/keys/credentials, with TruffleHog
+  - _Runs when:_ every PR
+- **Workflow audit** - Lints and security-audits the GitHub Actions, with actionlint + zizmor
+  - _Runs when:_ a workflow file changes (`.github/workflows/**`)
+
+| | |
+|---|---|
+| **Workflow** | [`ci.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/ci.yml) |
+| **Status** | [![🚦 PR Check](https://github.com/lissy93/dashy/actions/workflows/ci.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/ci.yml) |
+| **Triggers** | Pull request (PR opened/updated on master) |
+| **Inputs** | _None_ |
+| **Outputs** | _None_ |
+
+### Docker
+
+> The Docker workflow builds and publishes the Docker image.
+
+Uses our [`Dockerfile`](https://github.com/lissy93/dashy/blob/master/Dockerfile). This is a multi-arch (amd64, arm64, armv7) with each run as a matrix. The image is published to both GHCR ([`ghcr.io/lissy93/dashy`](https://github.com/lissy93/dashy/pkgs/container/dashy)) and DockerHub ([`lissy93/dashy`](https://hub.docker.com/r/lissy93/dashy/)). It also runs a trivy security scan, and if critical issues are present the scheduled job will fail, and results published under the Security tab. The job also attests both the build provenance and SBOM, which are published alongside the image. The Docker tags are computed from the values in the Dockerfile.
+
+| | |
+|---|---|
+| **Workflow** | [`docker.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/docker.yml) |
+| **Status** | [![🐳 Docker](https://github.com/lissy93/dashy/actions/workflows/docker.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/docker.yml) |
+| **Triggers** | Tag creation, schedule, manual dispatch |
+| **Inputs** | Tag (optional, inferred from git tag) |
+| **Outputs** | SHA, manifest, digest, SBOM, attestation |
+
+### Release
+
+> Builds the app and drafts a GitHub release with the packaged tarball
+
+Triggered by a major/minor (`X.Y.0`) tag push, or by manual dispatch against an existing tag. It builds Dashy, packages a release tarball (the built `dist` plus the server files needed to run it), then generates a SHA256 checksum and an SLSA build-provenance attestation. Finally it drafts a GitHub release with auto-generated notes (diffed against the previous `X.Y.0` tag). The release is only a draft - a maintainer reviews it and hits Publish.
+
+| | |
+|---|---|
+| **Workflow** | [`release.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/release.yml) |
+| **Status** | [![🚀 Release](https://github.com/lissy93/dashy/actions/workflows/release.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/release.yml) |
+| **Triggers** | Major/minor tag push (`*.*.0`), manual dispatch |
+| **Inputs** | Tag (required on manual dispatch, must already exist) |
+| **Outputs** | Draft release, tarball, SHA256 checksum, provenance attestation |
+
+### Tag
+
+> Bumps the version and pushes a new git tag
+
+When a PR with code changes is merged into master, this bumps the patch version in the package.json (unless the PR already bumped it), commits the change, then creates and pushes a git tag for the new version. That tag push is what kicks off the Docker and Release workflows downstream. It also labels and comments on any issues referenced in the PR, and pings the docs site to rebuild. It can also be triggered manually - either pass a specific version, or leave it blank to auto-bump the patch.
+
+| | |
+|---|---|
+| **Workflow** | [`tag.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/tag.yml) |
+| **Status** | [![🔖 Tag](https://github.com/lissy93/dashy/actions/workflows/tag.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/tag.yml) |
+| **Triggers** | PR merged to master, manual dispatch |
+| **Inputs** | Version (optional, leave blank to auto-bump patch) |
+| **Outputs** | Version-bump commit, git tag, issue labels/comments |
+
+### Mirror
+
+> Mirrors the repo over to our Codeberg instance
+
+Pushes a full copy of the repo to our Codeberg mirror, over at [codeberg.org/alicia/dashy](https://codeberg.org/alicia/dashy), so the project isn't solely hosted on GitHub. Runs weekly. Uses the [`lissy93/repo-mirror-action`](https://github.com/Lissy93/repo-mirror-action) action for keeping mirrors in-sync.
+
+| | |
+|---|---|
+| **Workflow** | [`mirror.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/mirror.yml) |
+| **Status** | [![🪞 Mirror](https://github.com/lissy93/dashy/actions/workflows/mirror.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/mirror.yml) |
+| **Triggers** | Schedule (weekly, Sun 03:30 UTC), manual dispatch |
+| **Inputs** | _None_ |
+| **Outputs** | _None_ |
+
+### Docs
+
+> Keeps the docs site and GitHub wiki in sync with the `/docs` directory
+
+Mirrors the markdown content from [`/docs`](https://github.com/lissy93/dashy/tree/master/docs) to the `WEBSITE/docs-site-source`, where it's then formatted and the Docusaurus site is re-built and deployed to [dashy.to](https://dashy.to/). Runs whenever docs are updated on master.
+
+| | |
+|---|---|
+| **Workflow** | [`update-docs-site.yml`](https://github.com/lissy93/dashy/blob/master/.github/workflows/update-docs-site.yml) |
+| **Status** | [![📝 Sync Docs](https://github.com/lissy93/dashy/actions/workflows/update-docs-site.yml/badge.svg)](https://github.com/lissy93/dashy/actions/workflows/update-docs-site.yml) |
+| **Triggers** | Push to `docs/**` on master, schedule (weekly), manual dispatch |
+| **Inputs** | _None_ |
+| **Outputs** | Updated docs on the `WEBSITE/docs-site-source` branch |
 
 ---
 
 ## Git Strategy
 
-### Git Flow
+### Commits
+We use [gitmoji](https://gitmoji.dev/) for commits (because it's fun!).
+Whereby each commit message starts with an emoji which indicates the change type.
 
+### Branches
+Most branches are named with their type, followed by short description.
+E.g. `feat/adds-awesome-feature`, `ref/language-deduplication`, `fix/resolves-missing-icons`.
+
+### Pull Requests
 Like most Git repos, we are following the [Github Flow](https://guides.github.com/introduction/flow) standard.
 
-1. Create a branch (or fork if you don'd have write access)
+1. Create a branch (or fork if you don't have write access)
 2. Code some awesome stuff, then add and commit your changes
-3. Create a Pull Request, complete the checklist and ensure the build succeeds
+3. Create a Pull Request, filling in the template
 4. Follow up with any reviews on your code
 5. Merge 🎉
-
-### Git Branch Naming
-
-The format of your branch name should be something similar to: `[TYPE]/[TICKET]_[TITLE]`
-For example, `FEATURE/420_Awesome-feature` or `FIX/690_login-server-error`
-
-### Commit Emojis
-
-Using a single emoji at the start of each commit message, to indicate the type task, makes the commit ledger easier to understand, plus it looks cool.
-
-- 🎨 `:art:` - Improve structure / format of the code.
-- ⚡️ `:zap:` - Improve performance.
-- 🔥 `:fire:` - Remove code or files.
-- 🐛 `:bug:` - Fix a bug.
-- 🚑️ `:ambulance:` - Critical hotfix
-- ✨ `:sparkles:` - Introduce new features.
-- 📝 `:memo:` - Add or update documentation.
-- 🚀 `:rocket:` - Deploy stuff.
-- 💄 `:lipstick:` - Add or update the UI and style files.
-- 🎉 `:tada:` - Begin a project.
-- ✅ `:white_check_mark:` - Add, update, or pass tests.
-- 🔒️ `:lock:` - Fix security issues.
-- 🔖 `:bookmark:` - Make a Release or Version tag.
-- 🚨 `:rotating_light:` - Fix compiler / linter warnings.
-- 🚧 `:construction:` - Work in progress.
-- ⬆️ `:arrow_up:` - Upgrade dependencies.
-- 👷 `:construction_worker:` - Add or update CI build system.
-- ♻️ `:recycle:` - Refactor code.
-- 🩹 `:adhesive_bandage:` - Simple fix for a non-critical issue.
-- 🔧 `:wrench:` - Add or update configuration files.
-- 🍱 `:bento:` - Add or update assets.
-- 🗃️ `:card_file_box:` - Perform database schema related changes.
-- ✏️ `:pencil2:` - Fix typos.
-- 🌐 `:globe_with_meridians:` - Internationalization and translations.
-
-For a full list of options, see [gitmoji.dev](https://gitmoji.dev/)
-
-### PR Guidelines
-
-Once you've made your changes, and pushed them to your fork or branch, you're ready to open a pull request!
-
-For a pull request to be merged, it must:
-
-- Must be backwards compatible
-- The build, lint and tests (run by GH actions) must pass
-- There must not be any merge conflicts
-
-When you submit your PR, include the required info, by filling out the PR template. Including:
-
-- A brief description of your changes
-- The issue, ticket or discussion number (if applicable)
-- For UI relate updates include a screenshot
-- If any dependencies were added, explain why it was needed, state the cost associated, and confirm it does not introduce any security issues
-- Finally, check the checkboxes, to confirm that the standards are met, and hit submit!
-
----
-
-## Automated Workflows
-
-Dashy makes heavy use of [GitHub Actions](https://github.com/features/actions) to fully automate the checking, testing, building, deploying of the project, as well as administration tasks like management of issues, tags, releases and documentation. The following section outlines each workflow, along with a link the the action file, current status and short description. A lot of these automations were made possible using community actions contributed to GH marketplace by some amazing people.
-
-### CI Checks
-
-These run on every pull request targeting master. All required checks must pass before merging.
-
-Action | Description
---- | ---
-**PR Quality Check** <br />[![pr-quality-check.yml](https://github.com/Lissy93/dashy/actions/workflows/pr-quality-check.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/pr-quality-check.yml) | Runs lint, unit tests, a full build and Docker smoke test against every PR. Also runs a security audit on dependencies
-**Dependency Update Summary** <br />[![dependency-updates-summary.yml](https://github.com/Lissy93/dashy/actions/workflows/dependency-updates-summary.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/dependency-updates-summary.yml) | When yarn.lock is modified in a PR, Liss-Bot comments with a summary of which packages changed
-
-### Releases
-
-Action | Description
---- | ---
-**Auto Version & Tag** <br />[![bump-and-tag.yml](https://github.com/Lissy93/dashy/actions/workflows/bump-and-tag.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/bump-and-tag.yml) | When a PR with code changes is merged into master, auto-bumps the patch version (if not already bumped) and creates a git tag
-**Manual Tag** <br />[![manual-tag.yml](https://github.com/Lissy93/dashy/actions/workflows/manual-tag.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/manual-tag.yml) | Manual dispatch workflow. Provide a version to tag, or leave empty to auto-bump patch. Updates package.json, commits and creates the tag
-**Docker Publish** <br />[![docker-build-publish.yml](https://github.com/Lissy93/dashy/actions/workflows/docker-build-publish.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/docker-build-publish.yml) | Triggered by tag pushes. Builds multi-arch Docker images and publishes to DockerHub and GHCR with semver tags
-**Draft Release** <br />[![draft-release.yml](https://github.com/Lissy93/dashy/actions/workflows/draft-release.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/draft-release.yml) | Triggered by tag pushes. Creates a draft GitHub release with auto-generated notes for major or minor version bumps. Patch-only bumps are skipped
-
-### Issue Management
-
-Action | Description
---- | ---
-**Close Stale Issues** <br />[![close-stale-issues.yml](https://github.com/Lissy93/dashy/actions/workflows/close-stale-issues.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/close-stale-issues.yml) | Issues which have not been updated for a long time will have a comment posted to them. If the author does not reply, the issue will be marked as stale and closed. Also handles issues awaiting user response and pings the maintainer when needed
-
-### Documentation
-
-Action | Description
---- | ---
-**Wiki Sync** <br />[![wiki-sync.yml](https://github.com/Lissy93/dashy/actions/workflows/wiki-sync.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/wiki-sync.yml) | Publishes the repository wiki from the markdown files in the docs directory. Runs weekly and on manual dispatch
-**Update Docs Site** <br />[![update-docs-site.yml](https://github.com/Lissy93/dashy/actions/workflows/update-docs-site.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/update-docs-site.yml) | When docs change on master, copies them to the website branch and processes them for the docs site
-**Build Docs Site** <br />[![build-docs-site.yml](https://github.com/Lissy93/dashy/actions/workflows/build-docs-site.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/build-docs-site.yml) | Builds and deploys the documentation website from the WEBSITE/docs-site-source branch
-
-### Other
-
-Action | Description
---- | ---
-**Mirror to Codeberg** <br />[![mirror.yml](https://github.com/Lissy93/dashy/actions/workflows/mirror.yml/badge.svg)](https://github.com/Lissy93/dashy/actions/workflows/mirror.yml) | Pushes a copy of the repo to Codeberg weekly and on manual dispatch
-
----
-
-## Release Pipeline
-
-```mermaid
-flowchart TD
-    A[PR opened] --> B[CI checks run\nlint, test, build, Docker smoke, security]
-    B --> C{Checks pass?}
-    C -- No --> D[PR blocked]
-    C -- Yes --> R[Maintainers review]
-    R --> E[PR merged into master]
-
-    E --> F{Code files changed?}
-    F -- No --> G[No action]
-    F -- Yes --> H{Version already\nbumped in PR?}
-    H -- Yes --> I[Use existing version]
-    H -- No --> J[Auto bump patch version]
-    J --> I
-
-    I --> K[Create git tag]
-    K --> L[Docker build + publish\namd64, arm64, arm/v7]
-    K --> M{Major or minor bump?}
-    M -- Yes --> N[Draft GitHub release]
-    M -- No --> O[Skip release]
-```
-
----

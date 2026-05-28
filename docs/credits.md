@@ -22,12 +22,11 @@ This app definitely wouldn't have been quite so possible without the making use 
 
 ### Core
 
-At it's core, the application uses [**Vue.js**](https://github.com/vuejs/vue), as well as it's services with [**VueX**](https://vuex.vuejs.org/) for state management. Styling is done with [**SCSS**](https://github.com/sass/sass), JavaScript is currently [**Babel**](https://github.com/babel/babel), (but I am in the process of converting to [**TypeScript**](https://github.com/Microsoft/TypeScript)). Linting is done with [**ESLint**](https://github.com/eslint/eslint) and [**Prettier**](https://prettier.io/), both following the [**AirBnB Styleguide**](https://github.com/airbnb/javascript). The config is defined in [**YAML**](https://github.com/yaml/yaml), with a simple [**Node.js**](https://github.com/nodejs/node) server to serve up the static app and the optional API endpoints, and container deployment is done with [**Docker**](https://www.docker.com/).
+At it's core, the application uses [**Vue.js**](https://github.com/vuejs/core), as well as it's services with [**VueX**](https://vuex.vuejs.org/) for state management. Styling is done with [**SCSS**](https://github.com/sass/sass), the app is written in [**TypeScript**](https://github.com/Microsoft/TypeScript) and JavaScript, and bundled with [**Vite**](https://github.com/vitejs/vite). Linting is done with [**ESLint**](https://github.com/eslint/eslint) and [**Prettier**](https://prettier.io/), both following the [**AirBnB Styleguide**](https://github.com/airbnb/javascript). The config is defined in [**YAML**](https://github.com/yaml/yaml), with a simple [**Node.js**](https://github.com/nodejs/node) server to serve up the static app and the optional API endpoints, and container deployment is done with [**Docker**](https://www.docker.com/).
 
 ### Utilities
 
 - [`crypto-js`](https://github.com/brix/crypto-js) - Encryption implementations by @evanvosberg and community `MIT`
-- [`axios`](https://github.com/axios/axios) - Promise based HTTP client by @mzabriskie and community `MIT`
 - [`ajv`](https://github.com/ajv-validator/ajv) - JSON schema Validator by @epoberezkin and community `MIT`
 - [`i18n`](https://github.com/kazupon/vue-i18n) - Internationalization plugin by @kazupon and community `MIT`
 - [`frappe-charts`](https://github.com/frappe/charts) - Lightweight charting library by @frappe `MIT`
@@ -35,12 +34,6 @@ At it's core, the application uses [**Vue.js**](https://github.com/vuejs/vue), a
 ### Frontend Components
 
 - [`vue-select`](https://github.com/sagalbot/vue-select) - Dropdown component by @sagalbot `MIT`
-- [`vue-js-modal`](https://github.com/euvl/vue-js-modal) - Modal component by @euvl `MIT`
-- [`v-tooltip`](https://github.com/Akryum/v-tooltip) - Tooltip component by @Akryum `MIT`
-- [`vue-material-tabs`](https://github.com/jairoblatt/vue-material-tabs) - Tab view component by @jairoblatt `MIT`
-- [`VJsoneditor`](https://github.com/yansenlei/VJsoneditor) - Interactive JSON editor component by @yansenlei `MIT`
-  - Forked from [`JsonEditor`](https://github.com/josdejong/jsoneditor) by @josdejong `Apache-2.0 License`
-- [`vue-swatches`](https://github.com/saintplay/vue-swatches) - Color palete picker by @saintplay `MIT`
 
 ---
 

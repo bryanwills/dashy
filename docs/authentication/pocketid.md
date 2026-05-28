@@ -1,4 +1,4 @@
-# Pocket ID Authentication for Dashy
+# Pocket ID OIDC
 
 Dashy supports using [Pocket ID](https://pocket-id.org/) as its OIDC provider.
 

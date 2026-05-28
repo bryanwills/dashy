@@ -1,4 +1,4 @@
-# Zitadel Authentication for Dashy
+# Zitadel OIDC
 
 Dashy supports using [Zitadel](https://zitadel.com/) as its OIDC provider.
 
@@ -109,7 +109,7 @@ First boot runs the database migrations and creates the org, admin user, and a m
 
 ## 2. Configure Zitadel
 
-Steps below are the manual UI walkthrough. There's also a Management API for scripted setup; an example bootstrap script is at [`alicia-notes/zitadel/configure.sh`](https://github.com/lissy93/dashy/blob/4.1.5/alicia-notes/zitadel/configure.sh) in the source repo.
+Steps below are the manual UI walkthrough. Zitadel also has a Management API if you'd rather script the setup.
 
 ### Create the project
 

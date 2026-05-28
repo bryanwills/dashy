@@ -262,7 +262,7 @@ If add any new variables, ensure that there is always a fallback (define it in [
 
 If this is your first time working on Dashy, then the [Developing Docs](/docs/developing) instructions for project setup and running. In short, you just need to clone the project, cd into it, install dependencies (`yarn`) and then start the development server (`yarn dev`).
 
-To build a widget, you'll also need some basic knowledge of Vue.js. The [official Vue docs](https://vuejs.org/v2/guide/) provides a good starting point, as does [this guide](https://www.taniarascia.com/getting-started-with-vue/) by Tania Rascia
+To build a widget, you'll also need some basic knowledge of Vue.js. The [official Vue docs](https://vuejs.org/guide/) provides a good starting point, as does [this guide](https://www.taniarascia.com/getting-started-with-vue/) by Tania Rascia
 
 If you just want to jump straight in, then [here](https://github.com/Lissy93/dashy/commit/3da76ce2999f57f76a97454c0276301e39957b8e) is a complete implementation of a new example widget, or take a look at the [`XkcdComic.vue`](https://github.com/Lissy93/dashy/blob/master/src/components/Widgets/XkcdComic.vue) widget, which is pretty simple.
 
@@ -278,7 +278,6 @@ Firstly, create a new `.vue` file under [`./src/components/Widgets`](https://git
 
 <script>
 
-import axios from 'axios';
 import WidgetMixin from '@/mixins/WidgetMixin';
 import { widgetApiEndpoints } from '@/utils/config/defaults';
 
@@ -366,9 +365,9 @@ endpoint() {
 
 #### **Making an API Request**
 
-Axios is used for making data requests, so import it into your component: `import axios from 'axios';`
+The widget mixin gives you a `makeRequest` method for fetching data, so you don't need to import an HTTP client. It handles the loading state, errors, timeouts and the optional CORS proxy for you.
 
-Under the `methods` block, we'll create a function called `fetchData`, here we can use Axios to make a call to our endpoint.
+Under the `methods` block, we'll create a function called `fetchData`, where we call `makeRequest` with our endpoint (and optionally any headers).
 
 ```javascript
 fetchData() {

@@ -2256,7 +2256,7 @@ Show user statuses for selected users.
 #### Example
 
 ```yaml
-- type: nextcloud-userstatus
+- type: nextcloud-user-status
   useProxy: true
   options:
     hostname: https://nextcloud.example.com

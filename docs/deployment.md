@@ -23,17 +23,27 @@ Once you've got Dashy up and running, you'll want to configure it with your own 
   - [Using Docker Compose](#using-docker-compose)
   - [Podman](#podman)
   - [Portainer](#portainer)
+  - [Coolify](#coolify)
+  - [1Panel](#1panel)
   - [Kubernetes](#kubernetes)
   - [Unraid](#unraid)
+  - [Proxmox VE](#proxmox-ve)
+  - [TrueNAS SCALE](#truenas-scale)
   - [Home Server Platforms](#home-server-platforms)
   - [Synology NAS](#synology-nas)
+  - [Saltbox](#saltbox)
   - [Build from Source](#build-from-source)
+  - [Nix / NixOS](#nix--nixos)
   - [Deploy to Cloud Service](#deploy-to-cloud-service)
     - [Netlify](#netlify)
     - [Vercel](#vercel)
+    - [Render](#render)
+    - [Railway](#railway)
+    - [Google Cloud Run](#google-cloud-run)
     - [Easypanel](#easypanel)
     - [EdgeOne Pages](#edgeone-pages)
     - [Play-with-Docker](#play-with-docker)
+  - [Managed Hosting](#managed-hosting)
   - [Hosting with CDN](#hosting-with-cdn)
   - [Requirements](#requirements)
     - [System Requirements](#system-requirements)
@@ -48,17 +58,17 @@ Once you've got Dashy up and running, you'll want to configure it with your own 
 
 **Container Info**: [
 ![Docker Supported Architecture](https://img.shields.io/badge/Architectures-amd64%20|%20arm32v7%20|%20arm64v8-6ba6e5)
-![Docker Base Image](https://img.shields.io/badge/Base_Image-Alpine_3.19-6ba6e5)
+![Docker Base Image](https://img.shields.io/badge/Base_Image-node%3A22--alpine-6ba6e5)
 ![Docker Hosted on](https://img.shields.io/badge/Hosted_on-DockerHub%20%26%20GHCR-6ba6e5)
 ](https://hub.docker.com/r/lissy93/dashy)<br />
 **Status**:
-![Build Status](https://img.shields.io/github/actions/workflow/status/Lissy93/dashy/docker-build-publish.yml?label=Build&color=f4a966)
+![Build Status](https://img.shields.io/github/actions/workflow/status/Lissy93/dashy/docker.yml?label=Build&color=f4a966)
 ![Docker Pulls](https://img.shields.io/docker/pulls/lissy93/dashy?color=ecb2f7)
 ![Docker Stars](https://img.shields.io/docker/stars/lissy93/dashy?color=f7f754&label=Docker%20Stars)
 ![Docker Image Size](https://img.shields.io/docker/image-size/lissy93/dashy/latest?color=1eea76)
 ![Docker Latest Version](https://img.shields.io/docker/v/lissy93/dashy/latest?color=a8d8ea&label=Latest%20Version)
 
-Dashy has a built container image hosted on [Docker Hub](https://hub.docker.com/r/lissy93/dashy). You will need [Docker](https://docs.docker.com/get-docker/) installed on your system.
+Dashy has a prebuilt container image hosted on [Docker Hub](https://hub.docker.com/r/lissy93/dashy). You will need [Docker](https://docs.docker.com/get-docker/) installed on your system.
 
 ```bash
 docker run -d \
@@ -79,7 +89,7 @@ Explanation of the above options:
 - `--restart=always` Spin up the container when the daemon starts, or after it has been stopped
 - `lissy93/dashy:latest` The image to run. Replace `:latest` with a specific version from the [tags](https://hub.docker.com/r/lissy93/dashy/tags) if needed
 
-For all available options, and to learn more, see the [Docker Run Docs](https://docs.docker.com/engine/reference/commandline/run/)
+For all available options, and to learn more, see the [Docker Run Docs](https://docs.docker.com/reference/cli/docker/container/run/)
 
 Dashy is also available through GHCR: `docker pull ghcr.io/lissy93/dashy:latest`
 
@@ -158,9 +168,24 @@ Alternatively, go to Containers > Add container and use the image `lissy93/dashy
 
 ---
 
+## Coolify
+
+[Coolify](https://coolify.io/) is a self-hostable PaaS (a Heroku/Netlify alternative). Dashy is available as a one-click service template: under **+ New Resource** > **Service**, search "Dashy" and deploy. It runs the full Docker image, so all features work. ([template source](https://github.com/coollabsio/coolify/blob/v4.x/templates/compose/dashy.yaml))
+
+---
+
+## 1Panel
+
+[1Panel](https://1panel.pro/) is a web-based Linux server management panel. Dashy is in its official App Store: open **App Store**, search "Dashy", click **Install**, and set the port. ([app page](https://1panel.pro/apps/dashy))
+
+---
+
 ## Kubernetes
 
-@vyrtualsynthese has written a Helm Chart for deploying with Kubernetes, available [here](https://github.com/vyrtualsynthese/selfhosted-helmcharts/tree/main/charts/dashy)
+@vyrtualsynthese has written a Helm Chart for deploying with Kubernetes, available [here](https://github.com/vyrtualsynthese/selfhosted-helmcharts/tree/main/charts/dashy).
+
+> [!NOTE]
+> This is a community chart and may lag behind the latest Dashy release — check the image tag before deploying.
 
 ---
 
@@ -172,14 +197,34 @@ If you'd prefer to set it up manually, go to Docker > Add Container and use `lis
 
 ---
 
+## Proxmox VE
+
+The community-maintained [Proxmox VE Helper-Scripts](https://community-scripts.github.io/ProxmoxVE/) project has a script that spins up Dashy in its own LXC container. Run this in the Proxmox host shell:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/dashy.sh)"
+```
+
+See the [script page](https://community-scripts.github.io/ProxmoxVE/scripts?id=dashy) for options. These scripts are community-run (not affiliated with Proxmox or Dashy), so give it a read before running.
+
+---
+
+## TrueNAS SCALE
+
+Dashy is in the TrueNAS community apps catalog. Go to **Apps** > **Discover Apps**, search "Dashy", click **Install**, then set the web port and a host-path storage volume for `/app/user-data`. ([catalog entry](https://apps.truenas.com/catalog/dashy/))
+
+Older setups may instead find Dashy via [TrueCharts](https://truecharts.org/charts/stable/dashy/), though TrueCharts is no longer integrated with TrueNAS and its chart may be outdated.
+
+---
+
 ## Home Server Platforms
 
-Several self-hosting platforms include Dashy in their app stores, giving you a one-click install with a management UI:
+Several self-hosting platforms let you install Dashy from an app store, with a management UI on top:
 
-- [CasaOS](https://casaos.io/) - Has Dashy in its built-in app store
-- [Cosmos Cloud](https://cosmos-cloud.io/) - Install Dashy from the marketplace
-- [Umbrel](https://umbrel.com/) - Available in the Umbrel App Store
-- [Runtipi](https://runtipi.io/) - Available in the Runtipi App Store
+- [Runtipi](https://runtipi.io/) - In the official Runtipi App Store
+- [Cosmos Cloud](https://cosmos-cloud.io/) - In the official Cosmos marketplace
+- [CasaOS](https://casaos.io/) - Via the community [BigBear app store](https://github.com/bigbeartechworld/big-bear-casaos) (not the built-in IceWhale store)
+- [Umbrel](https://umbrel.com/) - Via a [community app store](https://github.com/dennysubke/dennys-umbrel-app-store) (not the official Umbrel store)
 
 These all run Dashy as a Docker container under the hood, so configuration works the same way. You'll find your `conf.yml` in whichever directory the platform maps to `/app/user-data/`.
 
@@ -187,19 +232,14 @@ These all run Dashy as a Docker container under the hood, so configuration works
 
 ## Synology NAS
 
-Installing dashy is really simply and fast:
+On DSM 7.2 and later, Docker is provided by the **Container Manager** package:
 
-1. Install Docker via Synology ```Package Center```.
-2. Go to ```File Station``` and open the ```docker``` folder. Inside the docker folder, create one new folder and name it ```dashy```.
+1. Install **Container Manager** from the **Package Center**.
+2. In **File Station**, create a folder for Dashy's config (e.g. `docker/dashy`) and put your `conf.yml` (plus any icons/assets) inside it.
+3. In Container Manager, open **Registry**, search for `lissy93/dashy`, and download the `latest` tag.
+4. Under **Container** > **Create**, pick the image, enable auto-restart, map a host port (e.g. `4000`) to container port `8080`, and mount your `docker/dashy` folder to `/app/user-data`.
 
-    > Note: Be careful to enter only lowercase, not uppercase letters.
-
-3. Go to Control Panel / Task Scheduler / Create / Scheduled Task / User-defined script.
-4. Once you click on ```User-defined``` script a new window will open.
-5. Follow the instructions below:
-6. General: In the Task field type in Install dashy. Uncheck "Enabled" option. Select root User.
-7. Schedule: Select Run on the following date then select "Do not repeat".
-8. Task Settings: Check "Send run details by email", add your email then copy paste the code below in the Run command area. After that click OK.
+Alternatively, use Container Manager's **Project** feature with the [docker-compose.yml](https://github.com/Lissy93/dashy/blob/master/docker-compose.yml) above, or run it over SSH:
 
 ```bash
 docker run -d \
@@ -210,21 +250,43 @@ docker run -d \
   lissy93/dashy:latest
 ```
 
-(Place your `conf.yml` and any sub-configs / icons / assets inside `/volume1/docker/dashy` on the host.)
+Dashy should be reachable on your chosen port within a minute or two.
 
-dashy should be up within 1-2min after you've started the install task procedure
+---
+
+## Saltbox
+
+[Saltbox](https://saltbox.dev/) (an Ansible-based server automation project) includes Dashy as a sandbox app. Once Saltbox is set up, install it with:
+
+```bash
+sb install sandbox-dashy
+```
+
+See the [Saltbox Dashy docs](https://docs.saltbox.dev/sandbox/apps/dashy/) for details.
 
 ---
 
 ## Build from Source
 
-If you do not want to use Docker, you can run Dashy directly on your host system. For this, you will need both [git](https://git-scm.com/downloads) and the latest or LTS version of [Node.js](https://nodejs.org/) installed, and optionally [yarn](https://yarnpkg.com/)
+If you do not want to use Docker, you can run Dashy directly on your host system. For this, you will need both [git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org/) (v20 or newer) installed, and optionally [yarn](https://yarnpkg.com/)
 
 1. Get Code: `git clone https://github.com/Lissy93/dashy.git` and `cd dashy`
 2. Configuration: Fill in your settings in `./user-data/conf.yml`
 3. Install dependencies: `yarn`
 4. Build: `yarn build`
 5. Run: `yarn start`
+
+---
+
+## Nix / NixOS
+
+Dashy is packaged in [nixpkgs](https://search.nixos.org/packages?query=dashy-ui) as `dashy-ui`, and NixOS ships a `services.dashy` module. Enable it in your configuration:
+
+```nix
+services.dashy.enable = true;
+```
+
+See the [module options](https://search.nixos.org/options?query=services.dashy) for setting the port and your config. Or run it ad-hoc with `nix run nixpkgs#dashy-ui`. Note the packaged version can lag behind the latest Dashy release.
 
 ---
 
@@ -251,13 +313,40 @@ Deploy link: `https://app.netlify.com/start/deploy?repository=https://github.com
 
 Deploy link: `https://vercel.com/new/project?template=https://github.com/lissy93/dashy`
 
+### Render
+
+[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/lissy93/dashy)
+
+[Render](https://render.com/) runs the full Docker image, so status checks and config writing work. It builds from the [`render.yaml`](https://github.com/Lissy93/dashy/blob/master/render.yaml) blueprint at the repo root.
+
+Deploy link: `https://render.com/deploy?repo=https://github.com/lissy93/dashy`
+
+### Railway
+
+[![Deploy on Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway&logoColor=white)](https://railway.app/template/MtdjAQ?referralCode=app)
+
+[Railway](https://railway.com/) deploys the Dashy container from a template, with a free starter tier.
+
+Template: `https://railway.app/template/MtdjAQ`
+
+### Google Cloud Run
+
+[![Run on Google Cloud](https://img.shields.io/badge/Deploy-Cloud_Run-4285F4?logo=googlecloud&logoColor=white)](https://deploy.cloud.run/?git_repo=https://github.com/lissy93/dashy.git)
+
+[Cloud Run](https://cloud.google.com/run) runs the container serverlessly. The button opens Google Cloud Shell and builds from the repo's `Dockerfile`.
+
+Deploy link: `https://deploy.cloud.run/?git_repo=https://github.com/lissy93/dashy.git`
+
 ### Easypanel
 
-[![Deploy to Easypanel](https://img.shields.io/badge/Deploy-Easypanel-5765F2?logo=data:image/svg+xml;base64,&logoColor=white)](https://easypanel.io/docs/templates/dashy)
+[![Deploy to Easypanel](https://img.shields.io/badge/Deploy-Easypanel-5765F2)](https://easypanel.io/docs/templates/dashy)
 
 [Easypanel](https://easypanel.io) is a self-hosted server control panel with a Dashy template. It runs the full Docker image, so all features including the Node server work.
 
 Template: `https://easypanel.io/docs/templates/dashy`
+
+> [!NOTE]
+> The Easypanel template currently pins an older Dashy version. After deploying, change the image tag to `lissy93/dashy:latest` (or a recent version) to get the newest release.
 
 ### EdgeOne Pages
 
@@ -269,11 +358,23 @@ Deploy link: `https://edgeone.ai/pages/new?repository-url=https://github.com/lis
 
 ### Play-with-Docker
 
+> [!WARNING]
+> Play-with-Docker is being retired and now shows a deprecation notice, so it may stop working. Treat it as a throwaway demo only, and use another method for anything real.
+
 [![Try in PWD](https://img.shields.io/badge/Try-Play_with_Docker-0db7ed?logo=docker&logoColor=white)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/Lissy93/dashy/master/docker-compose.yml)
 
 [Play with Docker](https://labs.play-with-docker.com/) gives you a free, temporary Docker environment in the browser. Good for trying Dashy without installing anything. Sessions last 4 hours.
 
 URL: `https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/Lissy93/dashy/master/docker-compose.yml`
+
+---
+
+## Managed Hosting
+
+If you'd rather not self-host, a couple of providers will run a Dashy instance for you (paid):
+
+- [Elestio](https://elest.io/open-source/dashy) - Fully managed Dashy, or bring your own VM
+- [PikaPods](https://www.pikapods.com/) - Managed Dashy hosting from a few dollars per month
 
 ---
 
@@ -287,26 +388,22 @@ However without Dashy's node server, there are a couple of features that will be
 
 ## Requirements
 
-### System Requirements
+### Architecture
+The pre-built Docker image runs on `amd64`, `arm64` and `armv7` (`armv6` is not supported).
 
-Dashy works well on a Raspberry Pi (tested on Pi 3 and later), but should also run well on any system.
-
-### Docker
-
-The initial build causes a spike in resource usage, but once running it's fairly steady. Minimum 1GB memory and 1GB disk space.
+### System Resources
+- CPU: any single core, x86-64 or ARM
+- RAM: Node server idles around ~80–120 MB; 256 MB is comfortable, works in less
+- Disk: ~250 MB for the image + whatever your config/icons need
+- Runs fine on a Pi 3 and up
 
 ### Bare Metal
-
-Requires [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/). The `engines` field in `package.json` specifies `>=18.0.0`, but the Docker image is built and tested on Node 24, so that's the recommended version for bare-metal too.
-
-Minimum 512MB memory, 2GB disk space.
+Requires [Node.js](https://nodejs.org/) (20+) and [Yarn](https://yarnpkg.com/)
 
 ### CDN / Cloud Deploy
-
 No specific requirements. The built app (without the Node server) is very lightweight and can be served by any static host or CDN. If you're using custom icons or other assets, additional disk space will be needed.
 
 ### Browser Support
-
 JavaScript is required. Dashy targets browsers with >1% global usage and the last 2 versions of each (via [browserslist](https://browsersl.ist/)). In practice, any modern browser works fine. Internet Explorer is not supported.
 
 | Browser | Minimum Version | Status |
@@ -314,7 +411,7 @@ JavaScript is required. Dashy targets browsers with >1% global usage and the las
 | Chrome / Chromium | 90+ | Fully supported |
 | Firefox | 90+ | Fully supported |
 | Edge | 90+ | Fully supported |
-| Safari | 14+ | Supported |
+| Safari | 14+ | Mostly Supported |
 | Opera | 76+ | Supported |
 | Samsung Internet | 15+ | Supported |
 | Firefox ESR | Latest | Supported |

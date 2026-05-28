@@ -82,7 +82,7 @@ You can set variables either in your environment, or using the [`.env`](https://
 
 ### Environment Modes
 
-You can set the environment using the `NODE_ENV` variable. By default, the correct environment should be selected based on the script you run to start the app. The following environments are supported: `production`, `development` and `test`. For more info, see [Vue CLI Environment Modes](https://cli.vuejs.org/guide/mode-and-env.html#modes).
+You can set the environment using the `NODE_ENV` variable. By default, the correct environment should be selected based on the script you run to start the app. The following environments are supported: `production`, `development` and `test`. For more info, see [Vite Env Variables and Modes](https://vite.dev/guide/env-and-mode).
 
 ---
 
@@ -161,7 +161,7 @@ When you submit your PR, include the required info, by filling out the PR templa
 New to Web Development? Glad you're here! Dashy is a pretty simple app, so it should make a good candidate for your first PR. Presuming that you already have a basic knowledge of JavaScript, the following articles should point you in the right direction for getting up to speed with the technologies used in this project:
 
 - [Open Source for Beginners](https://opensource.guide/how-to-contribute/)
-- [Introduction to Vue.js](https://v3.vuejs.org/guide/introduction.html)
+- [Introduction to Vue.js](https://vuejs.org/guide/introduction.html)
 - [Vue.js Walkthrough](https://www.taniarascia.com/getting-started-with-vue/)
 - [ES6 Features](https://github.com/lukehoban/es6features)
 - [Definitive guide to SCSS](https://blog.logrocket.com/the-definitive-guide-to-scss/)
@@ -197,7 +197,7 @@ The most significant things to note are:
 
 Styleguides:
 
-- Vue: [Vue styleguide](https://vuejs.org/v2/style-guide/)
+- Vue: [Vue styleguide](https://vuejs.org/style-guide/)
 - JavaScript: [github.com/airbnb/javascript](https://github.com/airbnb/javascript)
 
 ---
@@ -212,14 +212,14 @@ Styleguides:
 ├── src/                # Project front-end source code
 ├── server.js           # A Node.js server to serve up the /dist directory
 ├── services/           # All server-side endpoints and utilities
-├── vue.config.js       # Vue.js configuration
+├── vite.config.mjs     # Vite (build tool) configuration
 ├── Dockerfile          # The blueprint for building the Docker container
 ├── docker-compose.yml  # A Docker run command
 ├── .env                # Location for any environmental variables
 ├── yarn.lock           # Auto-generated list of current packages and version numbers
 ├── docs/               # Markdown documentation
 ├── README.md           # Readme, basic info for getting started
-├── LICENSE.md          # License for use
+├── LICENSE             # License for use
 ╯
 ```
 
@@ -326,7 +326,6 @@ Styleguides:
 │  ├── CloudBackup.js             # Functionality for encrypting, processing and network calls
 │  ├── ConfigSchema.json          # The schema, used to validate the users conf.yml file
 │  ├── ConfigAccumulator.js       # Central place for managing and combining config
-│  ├── ConfigHelpers.js            # Collection of helper functions to process config using accumulator
 │  ├── ConfigValidator.js         # A helper script that validates the config file against schema
 │  ├── CoolConsole.js             # Prints info, warning and error messages to browser console, with a cool style
 │  ├── defaults.js                # Global constants and their default values
@@ -366,15 +365,5 @@ The easiest method of checking performance is to use Chromium's build in auditin
 ### Dependencies - BundlePhobia
 
 [BundlePhobia](https://bundlephobia.com/) is a really useful app that lets you analyze the cost of adding any particular dependency to an application
-
----
-
-## Notes
-
-### Known Warnings
-
-When running the build command, several warnings appear. These are not errors, and do not affect the security or performance of the application. They will be addressed in a future update
-
-`WARN  A new version of sass-loader is available. Please upgrade for best experience.` - Currently we're using an older version of SASS loader, since the more recent releases do not seem to be compatible with the Vue CLI's webpack configuration.
 
 `WARN asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).` - For the PWA to support Windows 10, a splash screen asset is required, and is quite large. This throws a warning, however PWA assets are not loaded until needed, so shouldn't have any impact on application performance. A similar warning is thrown for the Raleway font, and that is looking to be addressed.
