@@ -144,6 +144,7 @@ For more info, see the[Multi-Page docs](/docs/pages-and-sections#multi-page-supp
 **`disableSmartSort`** | `boolean` | _Optional_ | For the most-used and last-used app sort functions to work, a basic open-count is stored in local storage. If you do not want this to happen, then disable smart sort here, but you wil no longer be able to use these sort options. Defaults to `false`.
 **`disableUpdateChecks`** | `boolean` | _Optional_ | If set to true, Dashy will not check for updates. Defaults to `false`.
 **`enableServiceWorker`** | `boolean` | _Optional_ | Service workers cache web applications to improve load times and offer basic offline functionality, and are disabled by default in Dashy. The service worker can sometimes cause older content to be cached, requiring the app to be hard-refreshed. If you do not want SW functionality, or are having issues with caching, set this property to `false` to disable all service workers.
+**`enableAuthProxyCompat`** | `boolean` | _Optional_ | Only relevant when `enableServiceWorker` is `true` and when Dashy sits behind an authentication proxy (such as Cloudflare Zero Trust or Authelia). Set this to `true` to detect that redirect on load, unregister the service worker, and reload so re-authentication can proceed. Defaults to `false`.
 **`disableContextMenu`** | `boolean` | _Optional_ | If set to `true`, the custom right-click context menu will be disabled. Defaults to `false`.
 
 ****[⬆️ Back to Top](#)****

@@ -694,6 +694,7 @@ These are alternatives to Dashy's built-in auth, Keycloak, and OIDC. Most of the
 
 - [Reverse Proxy Auth](#reverse-proxy-auth) - Authelia, Authentik, or similar sitting in front of Dashy
 - [Zero-Trust Tunnels](#zero-trust-tunnels) - Cloudflare Tunnel, Tailscale Funnel
+- [Service Worker & Offline Use](#service-worker--offline-use) - Staying logged in with the service worker enabled
 - [VPN](#vpn) - Keep Dashy off the internet entirely
 - [IP-Based Access](#ip-based-access) - Restrict by source IP in your web server
 - [Web Server Authentication](#web-server-authentication) - HTTP basic auth at the proxy level
@@ -724,6 +725,10 @@ These let you expose Dashy to the internet without opening inbound ports or conf
 **Cloudflare Tunnel** connects Dashy to Cloudflare's edge network via an outbound-only `cloudflared` daemon (runs nicely as a Docker sidecar). Cloudflare handles DNS, TLS, and DDoS protection. Pair it with Cloudflare Access to require identity provider login before anyone reaches Dashy. The free tier covers most home setups. See the [Cloudflare Tunnel docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/).
 
 **Tailscale Funnel** exposes Dashy through your Tailscale mesh to the public internet, with automatic TLS. Simpler to set up than Cloudflare but you get less control over access policies. See the [Funnel docs](https://tailscale.com/kb/1223/funnel).
+
+### Service worker & offline use
+
+If you run Dashy behind any of the redirect-based proxies above and also enable the service worker for offline use (`appConfig.enableServiceWorker: true`), set `appConfig.enableAuthProxyCompat: true` as well. Without it, when your proxy session expires the cached app can get stuck — the service worker keeps serving the old page instead of letting the proxy redirect you to its login screen. With it enabled, Dashy detects the expiry on load and reloads so you can sign in again.
 
 ### VPN
 

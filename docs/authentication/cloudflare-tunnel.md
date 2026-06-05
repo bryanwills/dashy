@@ -201,6 +201,10 @@ Solution: The email Cloudflare sends must exactly match a `users[].user` entry w
 Problem: Each refresh bounces back through Cloudflare's login.<br />
 Solution: Session cookies are being blocked or stripped. Check that the tunnel's public hostname uses HTTPS (it does by default), that no upstream proxy strips third-party cookies, and that the Access application's session duration is non-zero.
 
+#### Stuck on a cached page after the Access session expires
+Problem: You have the service worker enabled (`appConfig.enableServiceWorker`), and once your Access session expires Dashy keeps showing a broken cached page instead of redirecting to the Cloudflare login.<br />
+Solution: Set `appConfig.enableAuthProxyCompat: true`. Dashy will then detect the expiry on load and reload so Cloudflare can redirect you to log in again.
+
 #### "Critical Configuration Load Error" on first load
 Problem: SPA errors out before showing the dashboard.<br />
 Solution: Usually a CORS or network reachability issue, but for Cloudflare Tunnel this is most often a `cloudflared` to `dashy` networking problem inside Docker. `docker compose logs cloudflared` will show connection attempts. Confirm both services are on the same Docker network and that the tunnel's public hostname URL matches the service name and port (e.g. `dashy:8080`, not `localhost:8080`).
