@@ -3290,9 +3290,66 @@ You can also use this widget to display an image, wither locally or from a remot
 
 ### API Response
 
-Directly output plain-text response from any API-enabled service.
+Display data from any HTTP/JSON API endpoint. Fetch a URL, then declaratively map response fields to labelled, formatted values.
+This was very much inspired by, and is broadly compatible with [Homepage's customapi widget](https://gethomepage.dev/widgets/services/customapi/)
 
-// Coming soon...
+#### Options
+
+**Field** | **Type** | **Required** | **Description**
+--- | --- | --- | ---
+**`url`** | `string` | Required | The full URL of the API endpoint to fetch
+**`refreshInterval`** | `number` | _Optional_ | How often to refetch, in milliseconds. Defaults to `10000` (10s). If omitted, the widget-level `updateInterval` (in seconds) is used instead
+**`username`** | `string` | _Optional_ | Username for HTTP basic auth
+**`password`** | `string` | _Optional_ | Password for HTTP basic auth
+**`method`** | `string` | _Optional_ | HTTP method, e.g. `GET` (default) or `POST`
+**`headers`** | `object` | _Optional_ | An object of custom request headers
+**`requestBody`** | `string` or `object` | _Optional_ | Request body for non-GET methods. Prefer an object. A raw string is JSON-encoded again, so don't pre-stringify
+**`display`** | `string` | _Optional_ | Layout for the fields: `block` (default, label and value on one row) or `list` (value stacked under the label)
+**`mappings`** | `array` | _Optional_ | The fields to display from the response (see below). If omitted, the raw response root is shown
+
+Each item in `mappings` accepts:
+
+**Field** | **Type** | **Required** | **Description**
+--- | --- | --- | ---
+**`field`** | `string` | _Optional_ | Dot-path to the value, e.g. `path.to.key` or `items.0.name`. Omit to use the response root (useful with `size`)
+**`label`** | `string` | _Optional_ | Label shown beside the value
+**`format`** | `string` | _Optional_ | One of `text` (default), `number`, `percent`, `date`, `relativeDate` or `size`
+**`locale`** | `string` | _Optional_ | Locale for `number`/`percent`/`date`/`relativeDate`, e.g. `nl`. Defaults to the browser locale
+**`dateStyle`** | `string` | _Optional_ | For `date` format. One of `full`, `long` (default), `medium`, `short`
+**`timeStyle`** | `string` | _Optional_ | For `date` format. One of `full`, `long`, `medium`, `short`
+**`style`** | `string` | _Optional_ | For `relativeDate` format. One of `long` (default), `short`, `narrow`
+**`numeric`** | `string` | _Optional_ | For `relativeDate` format. One of `always` (default) or `auto`
+**`additionalField`** | `object` | _Optional_ | A secondary value shown next to the main one. Accepts `field`, `format` (and its options), plus `color` - one of `theme`, `adaptive` (action colour from the value's sign: positive green, negative red), `black` or `white`
+
+Notes:
+- **`percent`** treats the value as an already-computed percentage, so `42` is shown as `42%`
+- **`size`** returns the number of items in an array (or keys in an object) — pair it with an omitted `field` to count the response root
+- For APIs that don't send CORS headers (most self-hosted services), set the widget-level `useProxy: true` to route the request through Dashy's server-side proxy
+
+#### Example
+
+```yaml
+- type: customapi
+  options:
+    url: https://api.github.com/repos/lissy93/dashy
+    refreshInterval: 60000
+    mappings:
+      - field: stargazers_count
+        label: Stars
+        format: number
+      - field: open_issues_count
+        label: Open Issues
+        format: number
+      - field: pushed_at
+        label: Last Push
+        format: relativeDate
+```
+
+#### Info
+
+- **CORS**: 🟠 Depends on target API (use `useProxy: true` if blocked)
+- **Auth**: 🟠 Optional (basic auth or custom headers)
+- **Price**: 🟢 Free
 
 ---
 
