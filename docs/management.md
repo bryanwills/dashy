@@ -206,6 +206,24 @@ For more information, see the [Watchtower Docs](https://containrrr.dev/watchtowe
 
 Stop your current instance of Dashy, then navigate into the source directory. Pull down the latest code, with `git pull origin master`, then update dependencies with `yarn`, rebuild with `yarn build`, and start the server again with `yarn start`.
 
+### Verifying a Release Download
+
+Each [GitHub release](https://github.com/lissy93/dashy/releases) bundles a SHA256 checksum and a SLSA build-provenance attestation alongside the source tarball (`dashy-<version>.tar.gz`). You don't need either to run Dashy, but they let you confirm a download arrived intact and was genuinely built from our source, rather than tampered with in transit or on a mirror.
+
+Check the tarball is intact using the `.sha256` file published next to it:
+
+```bash
+sha256sum -c dashy-<version>.tar.gz.sha256
+```
+
+An `OK` means the file is untampered. To go further and prove it was built by our CI from our repo, verify the attestation with the [GitHub CLI](https://cli.github.com/):
+
+```bash
+gh attestation verify dashy-<version>.tar.gz --repo lissy93/dashy
+```
+
+The release notes for each version also list the checksum and a link to view the attestation directly.
+
 ****[⬆️ Back to Top](#)****
 
 ---
@@ -796,6 +814,22 @@ Logging is important, as it enables you to review events in the future, and in t
 Only use trusted images, from verified/ official sources. If an app is open source, it is more likely to be safe, as anyone can verify the code. There are also tools available for scanning containers,
 
 Unless otherwise configured, containers can communicate among each other, so running one bad image may lead to other areas of your setup being compromised. Docker images typically contain both original code, as well as up-stream packages, and even if that image has come from a trusted source, the up-stream packages it includes may not have.
+
+Every Dashy image published to [GHCR](https://github.com/lissy93/dashy/pkgs/container/dashy) ships with a build-provenance attestation and an SBOM (software bill of materials), both signed keylessly via [Sigstore](https://www.sigstore.dev/). Provenance cryptographically ties the image back to the exact GitHub Actions run and commit that built it, so you can confirm it really came from our pipeline and was not swapped out along the way. The SBOM lists every package baked into the image, which is handy when a new CVE lands and you want to know in seconds whether you're affected.
+
+To verify the image you're about to run, use the [GitHub CLI](https://cli.github.com/):
+
+```bash
+gh attestation verify oci://ghcr.io/lissy93/dashy:latest --repo lissy93/dashy
+```
+
+A green check means it was genuinely built by us, from our repo. Worth doing on a fresh Proxmox or homelab box, especially before exposing Dashy beyond your LAN.
+
+To pull the SBOM and inspect what's inside, use [cosign](https://github.com/sigstore/cosign):
+
+```bash
+cosign download sbom ghcr.io/lissy93/dashy:latest
+```
 
 ### Specify the Tag
 
