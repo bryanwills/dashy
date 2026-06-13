@@ -219,6 +219,7 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 **`adminRole`** | `string` | _Optional_ | The role that will be considered as admin.
 **`adminGroup`** | `string` | _Optional_ | The group that will be considered as admin.
 **`scope`** | `string` | Required | The scope(s) to request from the OIDC provider
+**`enableSilentRenew`** | `boolean` | _Optional_ | If set to `true`, your session is silently renewed in the background before it expires (only works for providers which support the `offline_access` scope)
 
 ****[⬆️ Back to Top](#)****
 

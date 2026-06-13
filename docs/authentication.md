@@ -501,6 +501,27 @@ Dashy's server reads `auth.oidc` from `conf.yml` at boot, lazily fetches the OID
 
 Your IdP must include `groups` / `roles` in the id_token, not only the access token, for the admin check to work (most IdPs do this when the `groups` scope is requested).
 
+### Silent token renewal
+
+By default, when your access token expires Dashy sends you back through the provider's login page to get a new one. On a long-lived session this is visible as a brief flash of the sign-out button and a reload. Setting `enableSilentRenew: true` avoids it: Dashy requests a refresh token and uses it to renew the session in the background, before the token expires, with no interactive round-trip.
+
+```yaml
+    oidc:
+      clientId: dashy
+      endpoint: 'https://your-oidc-provider.example.com'
+      scope: 'openid profile email groups'
+      adminGroup: admin
+      enableSilentRenew: true
+```
+
+Notes:
+- It is opt-in and off by default. With it off, nothing changes, existing setups are unaffected.
+- **Your provider must support the `offline_access` scope.** When this is on, Dashy adds `offline_access` to the scope it requests at sign-in, so the provider issues a refresh token. Most providers support this (Authentik, Keycloak, Authelia, Okta, Auth0, Entra/Azure AD). A few do not, most notably **Google**, which uses `access_type=offline` instead and will reject the scope. Do not enable this flag against a provider that rejects `offline_access`, as it would break the interactive sign-in too. If unsure, test sign-in after enabling it.
+- The provider's client/app may also need to be allowed to issue refresh tokens to a public (PKCE) client. In Authentik this is automatic once `offline_access` is an allowed scope.
+- If a silent renewal fails for any reason (no refresh token issued, refresh token expired or revoked, the provider returns no fresh id_token, a provider error), Dashy falls back to the normal interactive sign-in. Renewal can save a round-trip, but the interactive flow always remains the safety net.
+- Renewal is driven by the access token's lifetime. If your provider issues an id_token with a much shorter lifetime than the access token, renewal may lag; keeping the two lifetimes equal (the common default) works best.
+- With multiple tabs open against a provider that rotates refresh tokens on use, tabs can briefly contend for the refresh token; the affected tab simply falls back to interactive sign-in. This is inherent to browser-based refresh tokens, not specific to Dashy.
+
 ---
 
 ## authentik

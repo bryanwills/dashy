@@ -245,6 +245,21 @@ If Zitadel runs on a different host or behind a reverse proxy, make sure `endpoi
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Zitadel's login page. After signing in, you'll land back on Dashy's homepage with full access, and all of Dashy's client, server and asset endpoints will be locked behind authentication.
 
+### Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Zitadel's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: "1234567890123456789"
+      endpoint: http://zitadel.lvh.me:8080
+      adminGroup: admins
+      scope: openid profile email
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically. For Zitadel to issue a refresh token, open the application's **Configuration** and make sure the **Refresh Token** grant type is enabled. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
+
 ---
 
 ## 4. Groups and Visibility

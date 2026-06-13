@@ -175,6 +175,21 @@ If Pocket ID runs behind a reverse proxy, make sure `endpoint` and `APP_URL` agr
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Pocket ID's sign-in page. Authenticate with your passkey (or paste a one-time code), and you'll land back on Dashy with full access. All of Dashy's client, server and asset endpoints will be locked behind authentication.
 
+### Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Pocket ID's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: 268a3701-e9ec-41f6-bad5-87c78ce87c94
+      endpoint: http://localhost:1411
+      adminGroup: admins
+      scope: openid profile email groups
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically, and Pocket ID issues a refresh token for it, so nothing needs changing on the Pocket ID side. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
+
 ---
 
 ## 4. Groups and Visibility

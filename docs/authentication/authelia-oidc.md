@@ -241,6 +241,37 @@ If Authelia uses a self-signed cert, Dashy's server has to trust it before it ca
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Authelia's login page. After signing in, you'll land back on Dashy's homepage with full access, and all of Dashy's client, server and asset endpoints will be locked behind authentication.
 
+### Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Authelia's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: dashy
+      endpoint: https://authelia.lvh.me:9091
+      adminGroup: admins
+      scope: openid profile email groups
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically, but Authelia only issues a refresh token if the client is allowed to. Add `offline_access` to the client's `scopes` and `refresh_token` to its `grant_types`:
+
+```yaml
+    clients:
+      - client_id: dashy
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+          - offline_access
+        grant_types:
+          - authorization_code
+          - refresh_token
+```
+
+It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
+
 ---
 
 ## 4. Groups and Visibility

@@ -219,6 +219,21 @@ If Authentik runs on a different host or behind a reverse proxy, make sure `endp
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Authentik's login page. After signing in you will land back on Dashy's homepage with full access, and all of Dashy's client, server and asset endpoints will be locked behind authentication.
 
+### Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Authentik's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: dashy
+      endpoint: https://auth.example.com/application/o/dashy/
+      adminGroup: dashy-admins
+      scope: openid profile email groups
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically. Authentik ships an `offline_access` scope mapping by default, so just make sure it's listed under the provider's **Advanced protocol settings > Selected Scopes**. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
+
 ---
 
 ## 4. Groups and Visibility
