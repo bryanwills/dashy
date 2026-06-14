@@ -266,6 +266,9 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 **`title`** | `string` | Required | The text to display/ title of a given item. Max length `18`
 **`description`** | `string` | _Optional_ | Additional info about an item, which is shown in the tooltip on hover, or visible on large tiles
 **`url`** | `string` | _Optional_ | The URL / location of web address for when the item is clicked
+**`localUrl`** | `string` | _Optional_ | An alternative URL (e.g. a LAN address) that is preferred whenever it is reachable from your browser
+**`localUrlTimeout`** | `number` | _Optional_ | Milliseconds to wait for the `localUrl` reachability probe before giving up and using `url`. Between `300` and `5000`. Defaults to `1500`
+**`localUrlCheckInterval`** | `number` | _Optional_ | Seconds between background re-checks of `localUrl`. `0` means only check on page load and when the browser tab regains focus. `300` max. Defaults to `0`
 **`icon`** | `string` | _Optional_ | The icon for a given item. Can be a font-awesome icon, favicon, remote URL or local URL. See [`item.icon`](#sectionicon-and-sectionitemicon)
 **`target`** | `string` | _Optional_ | The opening method for when the item is clicked, either `newtab`, `sametab`, `modal`, `workspace`, `clipboard`, `top` or `parent`. Where `newtab` will open the link in a new tab, `sametab` will open it in the current tab, and `modal` will open a pop-up modal, `workspace` will open in the Workspace view and `clipboard` will copy the URL to system clipboard (but not launch app). Defaults to `newtab`
 **`hotkey`** | `number` | _Optional_ | Give frequently opened applications a numeric hotkey, between `0 - 9`. You can then just press that key to launch that application.
