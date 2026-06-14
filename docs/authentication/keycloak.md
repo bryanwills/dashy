@@ -118,6 +118,8 @@ frame-src 'self' http://localhost:4000 http://127.0.0.1:4000; frame-ancestors 's
 
 6. Click **Save**.
 
+> If Dashy and Keycloak are served from the same origin in production, you can skip this step. Clearing X-Frame-Options and allow-listing origins is only needed when Dashy frames Keycloak's `check-sso` iframe across origins, as in this localhost setup.
+
 ### Create the Dashy client
 1. In the `dashy` realm, open **Clients**.
 2. Click **Create client**.
@@ -169,6 +171,8 @@ Dashy uses `adminRole: dashy-admin` in `user-data/conf.yml`. For server-side adm
 To grant admin via group membership instead of a realm role, add a second mapper of type *Group Membership* with claim name `groups`, create the group under *Groups*, assign your admin users to it, then set `adminGroup: <group-name>` (in place of `adminRole`) in your Dashy config later.
 
 ### Create test users
+
+> On Keycloak 25 and newer, **First name** and **Last name** are required by the default user-profile schema. Skip them and the user can authenticate, but login then fails with "Account is not fully set up". The steps below set both.
 
 Create an admin user:
 1. Open **Users**
@@ -255,7 +259,7 @@ Note that a restart is required for these changes to take effect.
 If Keycloak runs on a different host or behind a reverse proxy, make sure `serverUrl` is reachable from inside the Dashy container, and that the realm's redirect URIs and Web Origins match Dashy's public URL.
 
 Everything should now be fully configured and working 🎉<br />
-Now, when you load Dashy, you'll be redirected to your Keycloak login page, after logging in you will then land back on Dashy's homepage with full access! All Dashy's client, server and asset endpoints will be blocked, and return a 403 until you are authenticated.
+Now, when you load Dashy, you'll be redirected to your Keycloak login page, after logging in you will then land back on Dashy's homepage with full access! Until you're authenticated, Dashy's config and API endpoints return a 401 (a write attempt by a non-admin returns a 403).
 
 ---
 
@@ -274,7 +278,7 @@ displayData:
 
 Keycloak server administration and configuration is a deep topic; please refer to the [server admin guide](https://www.keycloak.org/docs/latest/server_admin/index.html#assigning-permissions-and-access-using-roles-and-groups) to see details about creating and assigning roles and groups.
 
-Once you have groups or roles assigned to users you can configure access under each section or item `displayData.showForKeycloakUser` and `displayData.hideForKeycloakUser`.
+Once you have groups or roles assigned to users you can configure access under each section or item `displayData.showForKeycloakUsers` and `displayData.hideForKeycloakUsers`.
 
 Both show and hide configurations accept a list of `groups` and `roles` that limit access. If a users data matches one or more items in these lists they will be allowed or excluded as defined.
 

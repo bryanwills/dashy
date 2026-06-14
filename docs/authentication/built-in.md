@@ -4,7 +4,7 @@ Dashy ships with a simple username + password auth system baked in, as well as t
 
 This is the quickest way to setup a login screen, without the need to run any other auth services. No identity provider to run, no external dependencies, just a list of users in `conf.yml`. Useful for keeping casual eyes of your dashboard within a LAN, but is probably not recommended if your instance is exposed to the public internet.
 
-This guide covers everything the built-in auth can do, from the lightest "show a login screen" mode to a server-enforced setup that 401s every unauthenticated request. If you need OIDC, SSO, or anything internet-facing, see the other guides in this folder ([Keycloak](/docs/keycloak), [Authentik](/docs/authentik), [Authelia](/docs/authelia-oidc), [Zitadel](/docs/zitadel), [Pocket ID](/docs/pocketid), [Cloudflare Tunnel](/docs/cloudflare-tunnel), [Tailscale](/docs/tailscale)). **Built-in auth is convenient, not hardened**.
+This guide covers everything the built-in auth can do, from the lightest "show a login screen" mode to a server-enforced setup that 401s every unauthenticated request. If you need OIDC, SSO, or anything internet-facing, see the other guides in this folder. **Built-in auth is convenient, not hardened**.
 
 ### Contents
 
@@ -64,7 +64,7 @@ Each user needs `user` plus exactly one of `hash` or `password` (not both!)
 
 ### Generating a password hash
 
-If you're using `hash`, you need to create a SHA-256 hash [↗](https://en.wikipedia.org/wiki/Sha-256) of your password. Either run `echo -n "my-super-secure-password" | sha256sum`, or using an online tool, such as [this one](https://emn178.github.io/online-tools/sha256.html).
+If you're using `hash`, you need to create a SHA-256 hash [↗](https://en.wikipedia.org/wiki/Sha-256) of your password. Either run `echo -n "my-super-secure-password" | sha256sum`, or use an online tool, such as [this one](https://emn178.github.io/online-tools/sha256.html) or [CyberChef](https://gchq.github.io/CyberChef/) (which can be self-hosted and run locally).
 
 ### Using an env var instead of an inline hash
 
@@ -176,7 +176,14 @@ Two `type` values exist: `admin` and `normal`. Plus there's the implicit "guest"
 | Save config to disk | ✅ yes | ❌ no | ❌ no |
 | See the **Logout** button | ✅ yes | ✅ yes | n/a (shows **Login**) |
 
-A `disableConfigurationForNonAdmin: true` flag on `appConfig` will hide the entire Config Menu from normal users and guests, leaving the dashboard view-only.
+A few `appConfig` flags control who can change config, and how:
+
+- `disableConfigurationForNonAdmin: true` - hides the entire Config Menu from normal users and guests, leaving the dashboard view-only
+- `disableConfiguration: true` - disables all config UI for everyone, including View Config and admins
+- `preventWriteToDisk: true` - prevents any user from writing config changes to disk
+- `preventLocalSave: true` - prevents config changes from being saved in the browser's local storage
+
+See [`appConfig`](/docs/configuring#appconfig-optional) for the full list of options.
 
 ### Per-section and per-item visibility
 
@@ -201,7 +208,19 @@ The full set:
 - `hideForUsers` - List of usernames who should not see this
 - `showForUsers` - List of usernames who *exclusively* see this (everyone else is hidden)
 
-These work for both sections and items.
+These work on sections and items, and on whole pages via a page's `displayData`:
+
+```yaml
+pages:
+  - name: Home Lab
+    path: home-lab.yml
+    displayData:
+      showForUsers: [alicia]
+  - name: Intranet
+    path: intranet.yml
+    displayData:
+      hideForGuests: true
+```
 
 > Visibility rules are UI-only. Hiding an item from a user doesn't strip the destination URL from the served `conf.yml` if `ENABLE_HTTP_AUTH` is off and they fetch it directly. Don't use `displayData` as a substitute for actually-private resources.
 

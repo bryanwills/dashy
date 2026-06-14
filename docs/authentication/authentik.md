@@ -13,8 +13,10 @@ Dashy supports using [Authentik](https://goauthentik.io/) as its OIDC provider.
   - [Create the application](#create-the-application)
   - [Create the admin group](#create-the-admin-group)
   - [Create test users](#create-test-users)
+  - [Restrict who can access Dashy (optional)](#restrict-who-can-access-dashy-optional)
 - [3. Enabling Authentik in Dashy](#3-enabling-authentik-in-dashy)
 - [4. Groups and Visibility](#4-groups-and-visibility)
+- [5. Silent token renewal (optional)](#5-silent-token-renewal-optional)
 - [Troubleshooting](#troubleshooting-common-authentik-issues)
 - [How it Works](#how-it-works)
   - [Client side](#client-side)
@@ -181,6 +183,24 @@ If you want separate accounts beyond `akadmin`:
 3. On the new user's page, click **Set password**, set a password, click **Update**
 4. Add the user to `dashy-admins` for admin access, or leave them out for a non-admin
 
+### Restrict who can access Dashy (optional)
+
+By default any Authentik user can sign in to Dashy. To limit access to one or more groups, bind a group policy to the `Dashy` application; Authentik then denies sign-in to anyone outside those groups. This is separate from `adminGroup`, which only controls who gets admin rights inside Dashy, not who can access it at all.
+
+1. Go to **Applications > Applications** and open the `Dashy` application
+
+![Open the Dashy application](https://github.com/user-attachments/assets/613fafe7-881f-4664-a903-945854ac65e2)
+
+2. Open the **Policy / Group / User Bindings** tab and click **Bind existing policy**
+
+![Open the bindings tab](https://github.com/user-attachments/assets/10fca15b-e77d-4624-ae03-0ece3910904c)
+
+3. Switch to the **Group** tab, choose the group that should have access, make sure **Enabled** is on, and click **Create**
+
+![Bind a group to the application](https://github.com/user-attachments/assets/ebf680ab-696f-4c08-ae89-d73fe92b398f)
+
+Access is now limited to members of the bound group. Add another binding for each additional group that should be allowed in.
+
 ### Summary
 
 Authentik should now be configured, and ready to go!
@@ -219,21 +239,6 @@ If Authentik runs on a different host or behind a reverse proxy, make sure `endp
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Authentik's login page. After signing in you will land back on Dashy's homepage with full access, and all of Dashy's client, server and asset endpoints will be locked behind authentication.
 
-### Silent token renewal (optional)
-
-By default, when your token expires Dashy sends you back through Authentik's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
-
-```yaml
-    oidc:
-      clientId: dashy
-      endpoint: https://auth.example.com/application/o/dashy/
-      adminGroup: dashy-admins
-      scope: openid profile email groups
-      enableSilentRenew: true
-```
-
-Dashy adds the `offline_access` scope to its request automatically. Authentik ships an `offline_access` scope mapping by default, so just make sure it's listed under the provider's **Advanced protocol settings > Selected Scopes**. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
-
 ---
 
 ## 4. Groups and Visibility
@@ -265,6 +270,21 @@ sections:
           hideForKeycloakUsers:
             groups: ['interns']
 ```
+
+## 5. Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Authentik's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: dashy
+      endpoint: https://auth.example.com/application/o/dashy/
+      adminGroup: dashy-admins
+      scope: openid profile email groups
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically. Authentik ships an `offline_access` scope mapping by default, so just make sure it's listed under the provider's **Advanced protocol settings > Selected Scopes**. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/oidc#silent-token-renewal) for the full notes and caveats.
 
 ---
 
@@ -349,7 +369,7 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 - `loadOidcSettings()` reads `auth.oidc` (or `auth.keycloak`) at boot and returns a normalised `{ issuer, clientId, adminGroup, adminRole }`. For generic OIDC providers the `issuer` is whatever you set as `endpoint` in `conf.yml`, verbatim
 - `createOidcMiddleware()` returns a Connect middleware. Permissive on no-token requests so the SPA can bootstrap; otherwise it verifies the Bearer token against the issuer's JWKS using [`jose`](https://github.com/panva/jose). Checks cover signature, issuer (against the canonical value from the discovery doc), audience (must equal `clientId`), and expiry, with a 30-second clock-skew tolerance. Sets `req.auth = { user, isAdmin, claims }` on success, `401` on failure
 - `getIssuerContext()` lazily fetches `.well-known/openid-configuration` on first use and wraps `jwks_uri` in `createRemoteJWKSet`, which handles JWKS caching and on-demand key rotation. The result is memoised per-issuer for the life of the process
-- `deriveIsAdmin()` checks the token's `groups` claim against `adminGroup`, and the `realm_access.roles` / `resource_access.<clientId>.roles` arrays against `adminRole`. Authentik only emits `groups`, so the group path is what's used in practice
+- `deriveIsAdmin()` checks the token's `groups` claim against `adminGroup`, and the top-level `roles` claim against `adminRole` (for Keycloak it also folds in the nested `realm_access.roles` / `resource_access.<clientId>.roles` arrays). Authentik only emits `groups`, so the group path is what's used in practice
 - `maybeBootstrapConfig()` is the stripped-response helper. When auth is configured, guest access is off, and an unauthenticated request hits the root `/conf.yml`, it returns a minimal copy with only `appConfig.auth`, `appConfig.enableServiceWorker`, and a `pageInfo.title` of `Login | <your title>`. Sections, items, hostnames and any other secrets never leave the server
 
 [`services/app.js`](https://github.com/lissy93/dashy/blob/4.1.5/services/app.js) wires it all together. The middleware mounts as `protectConfig` in front of every YAML route and config-mutating route. The `/*.yml` handler sets `Cache-Control: private, no-store` and `Vary: Authorization` whenever auth is configured (so intermediate caches can never mix auth states), then calls `maybeBootstrapConfig`; a stripped result is sent as-is, otherwise `res.sendFile` serves the full file. `POST /config-manager/save` is additionally guarded by `requireAdmin`, which returns `401` if `req.auth` is unset and `403` if `req.auth.isAdmin` is false.

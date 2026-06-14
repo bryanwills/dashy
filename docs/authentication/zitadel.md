@@ -19,6 +19,7 @@ Dashy supports using [Zitadel](https://zitadel.com/) as its OIDC provider.
   - [Create test users](#create-test-users)
 - [3. Enabling Zitadel in Dashy](#3-enabling-zitadel-in-dashy)
 - [4. Groups and Visibility](#4-groups-and-visibility)
+- [5. Silent token renewal (optional)](#5-silent-token-renewal-optional)
 - [Troubleshooting](#troubleshooting-common-zitadel-issues)
 - [How it Works](#how-it-works)
   - [Client side](#client-side)
@@ -245,21 +246,6 @@ If Zitadel runs on a different host or behind a reverse proxy, make sure `endpoi
 Everything should now be fully configured and working 🎉
 When you load Dashy, you'll be redirected to Zitadel's login page. After signing in, you'll land back on Dashy's homepage with full access, and all of Dashy's client, server and asset endpoints will be locked behind authentication.
 
-### Silent token renewal (optional)
-
-By default, when your token expires Dashy sends you back through Zitadel's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
-
-```yaml
-    oidc:
-      clientId: "1234567890123456789"
-      endpoint: http://zitadel.lvh.me:8080
-      adminGroup: admins
-      scope: openid profile email
-      enableSilentRenew: true
-```
-
-Dashy adds the `offline_access` scope to its request automatically. For Zitadel to issue a refresh token, open the application's **Configuration** and make sure the **Refresh Token** grant type is enabled. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/authentication#silent-token-renewal) for the full notes and caveats.
-
 ---
 
 ## 4. Groups and Visibility
@@ -291,6 +277,23 @@ sections:
           hideForKeycloakUsers:
             groups: ['interns']
 ```
+
+---
+
+## 5. Silent token renewal (optional)
+
+By default, when your token expires Dashy sends you back through Zitadel's login to get a new one. Set `enableSilentRenew: true` to have Dashy refresh the session quietly in the background instead, using a refresh token:
+
+```yaml
+    oidc:
+      clientId: "1234567890123456789"
+      endpoint: http://zitadel.lvh.me:8080
+      adminGroup: admins
+      scope: openid profile email
+      enableSilentRenew: true
+```
+
+Dashy adds the `offline_access` scope to its request automatically. For Zitadel to issue a refresh token, open the application's **Configuration** and make sure the **Refresh Token** grant type is enabled. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/oidc#silent-token-renewal) for the full notes and caveats.
 
 ---
 
@@ -375,7 +378,7 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 - `loadOidcSettings()` reads `auth.oidc` (or `auth.keycloak`) at boot and returns a normalised `{ issuer, clientId, adminGroup, adminRole }`. For generic OIDC providers the `issuer` is whatever you set as `endpoint` in `conf.yml`, verbatim
 - `createOidcMiddleware()` returns a Connect middleware. Permissive on no-token requests so the SPA can bootstrap; otherwise it verifies the Bearer token against the issuer's JWKS using [`jose`](https://github.com/panva/jose). Checks cover signature, issuer (against the canonical value from the discovery doc), audience (must equal `clientId`), and expiry, with a 30-second clock-skew tolerance. Sets `req.auth = { user, isAdmin, claims }` on success, `401` on failure
 - `getIssuerContext()` lazily fetches `.well-known/openid-configuration` on first use and wraps `jwks_uri` in `createRemoteJWKSet`, which handles JWKS caching and on-demand key rotation. The result is memoised per-issuer for the life of the process
-- `deriveIsAdmin()` checks the token's `groups` claim against `adminGroup`, and the `realm_access.roles` / `resource_access.<clientId>.roles` arrays against `adminRole`. Zitadel emits roles in a different format, which is why the Action maps them into a flat `groups` array for Dashy
+- `deriveIsAdmin()` checks the token's `groups` claim against `adminGroup`, and the top-level `roles` claim against `adminRole` (for Keycloak it also folds in the nested `realm_access.roles` / `resource_access.<clientId>.roles` arrays). Zitadel emits roles in a different format, which is why the Action maps them into a flat `groups` array for Dashy
 - `maybeBootstrapConfig()` is the stripped-response helper. When auth is configured, guest access is off, and an unauthenticated request hits the root `/conf.yml`, it returns a minimal copy with only `appConfig.auth`, `appConfig.enableServiceWorker`, and a `pageInfo.title` of `Login | <your title>`. Sections, items, hostnames and any other secrets never leave the server
 
 [`services/app.js`](https://github.com/lissy93/dashy/blob/4.1.5/services/app.js) wires it all together. The middleware mounts as `protectConfig` in front of every YAML route and config-mutating route. The `/*.yml` handler sets `Cache-Control: private, no-store` and `Vary: Authorization` whenever auth is configured (so intermediate caches can never mix auth states), then calls `maybeBootstrapConfig`; a stripped result is sent as-is, otherwise `res.sendFile` serves the full file. `POST /config-manager/save` is additionally guarded by `requireAdmin`, which returns `401` if `req.auth` is unset and `403` if `req.auth.isAdmin` is false.
