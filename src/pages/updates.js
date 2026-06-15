@@ -19,6 +19,15 @@ export default function Updates() {
         <div className={styles.pageHeader}>
           <h1>Project Updates</h1>
           <p>The latest releases and updates from Dashy</p>
+          <a
+            className={styles.rssLink}
+            href="/rss.xml"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Subscribe to Dashy releases and tags via RSS"
+          >
+            Subscribe via RSS
+          </a>
         </div>
         <UpdatesTimeline />
       </main>

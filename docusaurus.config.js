@@ -73,6 +73,16 @@ module.exports = {
       tagName: 'link',
       attributes: { rel: 'manifest', href: '/manifest.json' },
     },
+    // RSS feed autodiscovery
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'alternate',
+        type: 'application/rss+xml',
+        title: 'Dashy — Releases & Updates',
+        href: '/rss.xml',
+      },
+    },
     {
       tagName: 'meta',
       attributes: { name: 'theme-color', content: '#54bff7' },
@@ -127,6 +137,7 @@ module.exports = {
         { label: 'Live Demo', href: 'https://demo.dashy.to' },
         { label: 'Quick Start', to: '/docs/quick-start' },
         { label: 'Documentation', to: '/docs' },
+        { label: 'API', to: '/api' },
         { label: 'Changelog', to: '/updates' },
       ],
     },

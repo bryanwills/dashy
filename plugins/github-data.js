@@ -1,5 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
 const REPO = 'lissy93/dashy';
 const MAX_TAG_DATE_FETCHES = 20;
+const FEED_TAG_DATE_CHUNK = 10;
 
 function stripMarkdown(text) {
   return text
@@ -36,7 +40,129 @@ async function fetchAllContributors(headers) {
   return allContributors;
 }
 
+function escapeXml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+// Fetch every tag across all pages (the main loader only keeps page 1).
+async function fetchAllTags(headers) {
+  const allTags = [];
+  for (let page = 1; page <= 10; page++) {
+    const { json } = await fetchJson(
+      `https://api.github.com/repos/${REPO}/tags?per_page=100&page=${page}`,
+      headers,
+    );
+    if (!Array.isArray(json) || json.length === 0) break;
+    allTags.push(...json);
+    if (json.length < 100) break;
+  }
+  return allTags;
+}
+
+// Build an RSS 2.0 feed of every release and tag, newest first.
+// Returns the XML string, or null if there is nothing worth publishing.
+async function buildFeedXml(data, headers, siteUrl) {
+  const releases = Array.isArray(data.releases) ? data.releases : [];
+  const allTags = await fetchAllTags(headers);
+
+  // Seed known dates from data we already have, to avoid redundant API calls.
+  const dateByTag = new Map();
+  for (const r of releases) {
+    if (r.tag_name && r.published_at) dateByTag.set(r.tag_name, r.published_at);
+  }
+  for (const t of (data.tags || [])) {
+    if (t.name && t.date) dateByTag.set(t.name, t.date);
+  }
+  if (data.latestTag?.name && data.latestTag?.date) {
+    dateByTag.set(data.latestTag.name, data.latestTag.date);
+  }
+
+  // Resolve dates for any remaining tags via their commit, in bounded chunks.
+  const unresolved = allTags.filter(t => !dateByTag.has(t.name) && t.commit?.sha);
+  for (let i = 0; i < unresolved.length; i += FEED_TAG_DATE_CHUNK) {
+    const chunk = unresolved.slice(i, i + FEED_TAG_DATE_CHUNK);
+    const results = await Promise.allSettled(
+      chunk.map(t =>
+        fetchJson(`https://api.github.com/repos/${REPO}/commits/${t.commit.sha}`, headers)
+          .then(({ json: c }) => ({
+            name: t.name,
+            date: c.commit?.author?.date || c.commit?.committer?.date,
+          }))
+      )
+    );
+    for (const res of results) {
+      if (res.status === 'fulfilled' && res.value.date) {
+        dateByTag.set(res.value.name, res.value.date);
+      }
+    }
+  }
+
+  // Releases first (richer content), then tags that have no release of their own.
+  const releaseTagNames = new Set(releases.map(r => r.tag_name));
+  const items = [];
+  for (const r of releases) {
+    if (!r.published_at) continue;
+    items.push({
+      title: r.name || r.tag_name,
+      url: r.html_url || `https://github.com/${REPO}/releases/tag/${r.tag_name}`,
+      date: r.published_at,
+      description: r.body || `Release ${r.tag_name}`,
+      category: 'Release',
+    });
+  }
+  for (const t of allTags) {
+    if (releaseTagNames.has(t.name)) continue;
+    const date = dateByTag.get(t.name);
+    if (!date) continue;
+    items.push({
+      title: t.name,
+      url: `https://github.com/${REPO}/releases/tag/${t.name}`,
+      date,
+      description: `Tag ${t.name}`,
+      category: 'Tag',
+    });
+  }
+
+  if (items.length === 0) return null;
+  items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const feedUrl = `${siteUrl}rss.xml`;
+  const channelLink = `${siteUrl}updates`;
+  const xmlItems = items.map(it => `    <item>
+      <title>${escapeXml(it.title)}</title>
+      <link>${escapeXml(it.url)}</link>
+      <guid isPermaLink="true">${escapeXml(it.url)}</guid>
+      <pubDate>${new Date(it.date).toUTCString()}</pubDate>
+      <category>${escapeXml(it.category)}</category>
+      <description>${escapeXml(it.description)}</description>
+    </item>`).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dashy — Releases &amp; Updates</title>
+    <link>${escapeXml(channelLink)}</link>
+    <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml" />
+    <description>New releases and version tags for Dashy, the self-hosted dashboard for your homelab.</description>
+    <language>en</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <generator>dashy-docs github-data plugin</generator>
+${xmlItems}
+  </channel>
+</rss>
+`;
+}
+
 module.exports = function githubDataPlugin(context) {
+  const { url, baseUrl } = context.siteConfig;
+  const siteUrl = url.replace(/\/$/, '') + (baseUrl || '/');
+  let feedXml = null;
+
   return {
     name: 'github-data',
 
@@ -236,11 +362,30 @@ module.exports = function githubDataPlugin(context) {
         .map(([k, v]) => Array.isArray(v) ? `${k}(${v.length})` : `${k}`)
         .join(', ');
       console.log(`[github-data] Build-time data: ${fetched || 'none (API rate-limited?)'}`);
+
+      // Build the RSS feed from the same data. Never let this break the build.
+      try {
+        feedXml = await buildFeedXml(data, headers, siteUrl);
+        console.log(`[github-data] RSS feed: ${feedXml ? 'generated' : 'skipped (no data)'}`);
+      } catch (err) {
+        console.warn(`[github-data] RSS feed generation failed: ${err.message}`);
+      }
+
       return data;
     },
 
     async contentLoaded({ content, actions }) {
       actions.setGlobalData(content);
+    },
+
+    async postBuild({ outDir }) {
+      if (!feedXml) return;
+      try {
+        fs.writeFileSync(path.join(outDir, 'rss.xml'), feedXml);
+        console.log('[github-data] Wrote rss.xml to build output');
+      } catch (err) {
+        console.warn(`[github-data] Failed to write rss.xml: ${err.message}`);
+      }
     },
   };
 };

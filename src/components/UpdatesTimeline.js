@@ -200,7 +200,7 @@ function TimelineEntry({ entry, contributors }) {
                 DockerHub
             </a>
             {Date.now() - entry.date > 7 * 86400000 && (
-              <a href={`https://codeberg.org/alicia/dashy/releases/tag/${entry.tagName || entry.title}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://codeberg.org/alicia/dashy/src/tag/${entry.tagName || entry.title}`} target="_blank" rel="noopener noreferrer">
                 <img className={styles.providerIcon} src="https://cdn.as93.net/7c72qs?w=32" />
                 Codeberg
               </a>
@@ -235,7 +235,7 @@ function TimelineEntry({ entry, contributors }) {
                 DockerHub
             </a>
             {Date.now() - entry.date > 7 * 86400000 && (
-              <a href={`https://codeberg.org/alicia/dashy/releases/tag/${entry.title}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://codeberg.org/alicia/dashy/src/tag/${entry.title}`} target="_blank" rel="noopener noreferrer">
                 <img className={styles.providerIcon} src="https://cdn.as93.net/7c72qs?w=32" />
                 Codeberg
               </a>
@@ -457,8 +457,24 @@ export default function UpdatesTimeline() {
   );
 
   const grouped = useMemo(() => {
+    // Versions that have a tag/release of their own (normalised, sans leading "v").
+    const taggedVersions = new Set(
+      [...tags.map(t => t.tagName || t.title), ...releases.map(r => r.tagName)]
+        .filter(Boolean)
+        .map(v => v.replace(/^v/i, '')),
+    );
+
+    // The "🔖 Bump version to X.Y.Z" commit is what triggers each tag, so it just
+    // duplicates the tag entry. Hide it when its version matches a known tag.
+    const isDuplicateBump = (e) => {
+      if (e.type !== 'commit') return false;
+      const m = e.title.match(/bump version to\s*v?([\w.\-]+)/i);
+      return !!m && taggedVersions.has(m[1].replace(/^v/i, ''));
+    };
+
     const all = [...releases, ...tags, ...commits]
       .filter(e => e.date instanceof Date && !isNaN(e.date))
+      .filter(e => !isDuplicateBump(e))
       .sort((a, b) => b.date - a.date);
     const groups = [];
     let currentKey = null;

@@ -23,6 +23,28 @@
   }
 }
 
+.rssLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary, #54bff7);
+  text-decoration: none;
+  border: 1px solid var(--ifm-color-primary, #54bff7);
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: var(--ifm-color-primary, #54bff7);
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
 .timeline {
   width: 80%;
   max-width: 1000px;
