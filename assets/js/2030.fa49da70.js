@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdashy=globalThis.webpackChunkdashy||[]).push([[2030],{82030(l,a,e){e.r(a),e.d(a,{default:()=>t});var s=e(20641),n=e(3395);const t=(0,s.pM)({__name:"CollectionSync",setup:l=>(l,a)=>((0,s.uX)(),(0,s.Wv)(n.A,null,{title:(0,s.k6)(()=>[...a[0]||(a[0]=[(0,s.eW)("Sync",-1)])]),_:1}))})}}]);

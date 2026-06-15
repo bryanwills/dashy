@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dashy — Releases &amp; Updates</title>
+    <link>https://dashy.to/updates</link>
+    <atom:link href="https://dashy.to/rss.xml" rel="self" type="application/rss+xml" />
+    <description>New releases and version tags for Dashy, the self-hosted dashboard for your homelab.</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 15 Jun 2026 11:35:07 GMT</lastBuildDate>
+    <generator>dashy-docs github-data plugin</generator>
+    <item>
+      <title>4.3.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.8</guid>
+      <pubDate>Mon, 15 Jun 2026 11:20:52 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.8</description>
+    </item>
+    <item>
+      <title>4.3.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.7</guid>
+      <pubDate>Sun, 14 Jun 2026 18:01:00 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.7</description>
+    </item>
+    <item>
+      <title>4.3.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.6</guid>
+      <pubDate>Sun, 14 Jun 2026 13:52:32 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.6</description>
+    </item>
+    <item>
+      <title>4.3.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.5</guid>
+      <pubDate>Sun, 14 Jun 2026 12:58:08 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.5</description>
+    </item>
+    <item>
+      <title>4.3.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.4</guid>
+      <pubDate>Sat, 13 Jun 2026 18:54:59 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.4</description>
+    </item>
+    <item>
+      <title>4.3.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.3</guid>
+      <pubDate>Fri, 12 Jun 2026 10:12:19 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.3</description>
+    </item>
+    <item>
+      <title>4.3.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.2</guid>
+      <pubDate>Fri, 12 Jun 2026 09:29:20 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.2</description>
+    </item>
+    <item>
+      <title>4.3.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.1</guid>
+      <pubDate>Thu, 11 Jun 2026 12:54:26 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.3.1</description>
+    </item>
+    <item>
+      <title>Release 4.3.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.3.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.3.0</guid>
+      <pubDate>Thu, 11 Jun 2026 11:20:26 GMT</pubDate>
+      <category>Release</category>
+      <description>What&apos;s Changed  fix: correct zh-CN translation accuracy and consistency by @zcq100 in https://github.com/lissy93/dashy/pull/2176  Update Danish translations in da.json by @olenoerby in https://githu</description>
+    </item>
+    <item>
+      <title>4.2.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.9</guid>
+      <pubDate>Wed, 10 Jun 2026 16:43:55 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.9</description>
+    </item>
+    <item>
+      <title>4.2.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.8</guid>
+      <pubDate>Wed, 10 Jun 2026 14:26:50 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.8</description>
+    </item>
+    <item>
+      <title>4.2.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.7</guid>
+      <pubDate>Sat, 06 Jun 2026 11:54:32 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.7</description>
+    </item>
+    <item>
+      <title>4.2.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.6</guid>
+      <pubDate>Sat, 06 Jun 2026 05:07:30 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.6</description>
+    </item>
+    <item>
+      <title>4.2.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.5</guid>
+      <pubDate>Fri, 05 Jun 2026 15:05:23 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.5</description>
+    </item>
+    <item>
+      <title>4.2.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.4</guid>
+      <pubDate>Thu, 04 Jun 2026 12:40:03 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.4</description>
+    </item>
+    <item>
+      <title>4.2.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.3</guid>
+      <pubDate>Thu, 04 Jun 2026 09:19:50 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.3</description>
+    </item>
+    <item>
+      <title>4.2.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.2</guid>
+      <pubDate>Wed, 03 Jun 2026 16:53:09 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.2</description>
+    </item>
+    <item>
+      <title>4.2.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.1</guid>
+      <pubDate>Tue, 02 Jun 2026 08:36:46 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.2.1</description>
+    </item>
+    <item>
+      <title>Release 4.2.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.2.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.2.0</guid>
+      <pubDate>Fri, 29 May 2026 20:00:38 GMT</pubDate>
+      <category>Release</category>
+      <description>What&apos;s Changed  Reviewed and completed french translations by @bgillet in https://github.com/lissy93/dashy/pull/2142  Bump @sentry/vue from 9.47.1 to 10.53.1 by @dependabot[bot] in https://github.co</description>
+    </item>
+    <item>
+      <title>4.1.16</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.16</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.16</guid>
+      <pubDate>Wed, 27 May 2026 00:31:41 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.16</description>
+    </item>
+    <item>
+      <title>4.1.15</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.15</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.15</guid>
+      <pubDate>Sat, 23 May 2026 12:06:46 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.15</description>
+    </item>
+    <item>
+      <title>4.1.14</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.14</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.14</guid>
+      <pubDate>Sat, 23 May 2026 10:15:50 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.14</description>
+    </item>
+    <item>
+      <title>4.1.13</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.13</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.13</guid>
+      <pubDate>Sat, 23 May 2026 10:14:51 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.13</description>
+    </item>
+    <item>
+      <title>4.1.12</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.12</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.12</guid>
+      <pubDate>Sat, 23 May 2026 10:12:33 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.12</description>
+    </item>
+    <item>
+      <title>4.1.11</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.11</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.11</guid>
+      <pubDate>Fri, 22 May 2026 17:42:14 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.11</description>
+    </item>
+    <item>
+      <title>4.1.10</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.10</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.10</guid>
+      <pubDate>Fri, 22 May 2026 11:51:07 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.10</description>
+    </item>
+    <item>
+      <title>4.1.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.9</guid>
+      <pubDate>Thu, 21 May 2026 21:19:35 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.9</description>
+    </item>
+    <item>
+      <title>4.1.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.8</guid>
+      <pubDate>Wed, 20 May 2026 10:34:48 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.8</description>
+    </item>
+    <item>
+      <title>4.1.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.7</guid>
+      <pubDate>Tue, 19 May 2026 17:26:03 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.7</description>
+    </item>
+    <item>
+      <title>4.1.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.6</guid>
+      <pubDate>Tue, 19 May 2026 15:06:28 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.6</description>
+    </item>
+    <item>
+      <title>4.1.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.5</guid>
+      <pubDate>Mon, 18 May 2026 18:14:09 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.5</description>
+    </item>
+    <item>
+      <title>4.1.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.4</guid>
+      <pubDate>Sun, 17 May 2026 17:52:05 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.4</description>
+    </item>
+    <item>
+      <title>4.1.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.3</guid>
+      <pubDate>Sun, 17 May 2026 16:47:15 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.3</description>
+    </item>
+    <item>
+      <title>4.1.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.2</guid>
+      <pubDate>Sun, 17 May 2026 07:55:20 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.2</description>
+    </item>
+    <item>
+      <title>4.1.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.1</guid>
+      <pubDate>Sat, 16 May 2026 23:00:46 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.1.1</description>
+    </item>
+    <item>
+      <title>Release 4.1.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.1.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.1.0</guid>
+      <pubDate>Sat, 16 May 2026 18:02:47 GMT</pubDate>
+      <category>Release</category>
+      <description>What&apos;s Changed  Bring back old layout by @lissy93 in https://github.com/lissy93/dashy/pull/2095  ⬆️(deps): Bump the minor-and-patch group across 1 directory with 8 updates by @dependabot[bot] in htt</description>
+    </item>
+    <item>
+      <title>4.0.10</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.10</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.10</guid>
+      <pubDate>Sat, 16 May 2026 15:58:49 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.10</description>
+    </item>
+    <item>
+      <title>4.0.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.9</guid>
+      <pubDate>Fri, 15 May 2026 13:08:38 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.9</description>
+    </item>
+    <item>
+      <title>4.0.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.8</guid>
+      <pubDate>Sat, 09 May 2026 21:41:23 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.8</description>
+    </item>
+    <item>
+      <title>4.0.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.7</guid>
+      <pubDate>Fri, 08 May 2026 21:18:36 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.7</description>
+    </item>
+    <item>
+      <title>4.0.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.6</guid>
+      <pubDate>Sun, 03 May 2026 09:14:55 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.6</description>
+    </item>
+    <item>
+      <title>4.0.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.5</guid>
+      <pubDate>Sat, 02 May 2026 17:44:40 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.5</description>
+    </item>
+    <item>
+      <title>4.0.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.4</guid>
+      <pubDate>Sat, 02 May 2026 11:41:59 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.4</description>
+    </item>
+    <item>
+      <title>4.0.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.3</guid>
+      <pubDate>Wed, 29 Apr 2026 08:24:00 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.3</description>
+    </item>
+    <item>
+      <title>4.0.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.2</guid>
+      <pubDate>Mon, 27 Apr 2026 12:57:10 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 4.0.2</description>
+    </item>
+    <item>
+      <title>Release 4.0.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.1</guid>
+      <pubDate>Sun, 26 Apr 2026 17:32:59 GMT</pubDate>
+      <category>Release</category>
+      <description>Full Changelog: https://github.com/Lissy93/dashy/compare/4.0.0...4.0.1</description>
+    </item>
+    <item>
+      <title>Release 4.0.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/4.0.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/4.0.0</guid>
+      <pubDate>Sun, 26 Apr 2026 16:55:58 GMT</pubDate>
+      <category>Release</category>
+      <description>This is a big one! I&apos;m sorry this one has taken so long to get released. It turned out to be a much bigger task than I first expected.   Changes For the full list of changes, see: 2002  Many of </description>
+    </item>
+    <item>
+      <title>3.3.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.3.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.3.1</guid>
+      <pubDate>Sun, 19 Apr 2026 22:43:13 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.3.1</description>
+    </item>
+    <item>
+      <title>Release 3.3.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.3.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.3.0</guid>
+      <pubDate>Wed, 15 Apr 2026 19:56:40 GMT</pubDate>
+      <category>Release</category>
+      <description>What&apos;s Changed  Update/remove axios by @Lissy93 in https://github.com/Lissy93/dashy/pull/2027  Complete Turkish (tr) translations to 100% coverage by @onwp in https://github.com/Lissy93/dashy/pull/2</description>
+    </item>
+    <item>
+      <title>3.2.15</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.15</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.15</guid>
+      <pubDate>Mon, 13 Apr 2026 21:47:08 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.15</description>
+    </item>
+    <item>
+      <title>3.2.14</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.14</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.14</guid>
+      <pubDate>Mon, 13 Apr 2026 13:30:25 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.14</description>
+    </item>
+    <item>
+      <title>3.2.13</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.13</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.13</guid>
+      <pubDate>Sun, 12 Apr 2026 19:29:07 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.13</description>
+    </item>
+    <item>
+      <title>3.2.12</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.12</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.12</guid>
+      <pubDate>Sat, 11 Apr 2026 19:30:48 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.12</description>
+    </item>
+    <item>
+      <title>3.2.11</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.11</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.11</guid>
+      <pubDate>Fri, 10 Apr 2026 17:48:15 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.11</description>
+    </item>
+    <item>
+      <title>3.2.10</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.10</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.10</guid>
+      <pubDate>Wed, 08 Apr 2026 09:54:50 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.10</description>
+    </item>
+    <item>
+      <title>3.2.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.9</guid>
+      <pubDate>Wed, 08 Apr 2026 09:30:10 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.9</description>
+    </item>
+    <item>
+      <title>3.2.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.8</guid>
+      <pubDate>Wed, 08 Apr 2026 08:26:48 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.8</description>
+    </item>
+    <item>
+      <title>3.2.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.7</guid>
+      <pubDate>Wed, 08 Apr 2026 08:21:43 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.7</description>
+    </item>
+    <item>
+      <title>3.2.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.6</guid>
+      <pubDate>Wed, 08 Apr 2026 08:19:31 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.6</description>
+    </item>
+    <item>
+      <title>3.2.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.5</guid>
+      <pubDate>Tue, 07 Apr 2026 13:20:24 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.5</description>
+    </item>
+    <item>
+      <title>3.2.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.4</guid>
+      <pubDate>Sun, 05 Apr 2026 21:42:47 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.4</description>
+    </item>
+    <item>
+      <title>3.2.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.3</guid>
+      <pubDate>Thu, 02 Apr 2026 11:36:44 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.3</description>
+    </item>
+    <item>
+      <title>3.2.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.2</guid>
+      <pubDate>Wed, 01 Apr 2026 14:13:31 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.2</description>
+    </item>
+    <item>
+      <title>3.2.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.1</guid>
+      <pubDate>Tue, 31 Mar 2026 21:41:18 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.2.1</description>
+    </item>
+    <item>
+      <title>Release 3.2.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.2.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.2.0</guid>
+      <pubDate>Mon, 30 Mar 2026 07:37:56 GMT</pubDate>
+      <category>Release</category>
+      <description>What&apos;s Changed  Update Github trending widget by @alhazmy13 in https://github.com/Lissy93/dashy/pull/1562  Bump simple-icons to 12.2.0 by @michaelfeinbier in https://github.com/Lissy93/dashy/pull/16</description>
+    </item>
+    <item>
+      <title>3.1.15</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.15</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.15</guid>
+      <pubDate>Sun, 29 Mar 2026 17:56:56 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.15</description>
+    </item>
+    <item>
+      <title>3.1.14</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.14</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.14</guid>
+      <pubDate>Sun, 29 Mar 2026 17:24:47 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.14</description>
+    </item>
+    <item>
+      <title>3.1.13</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.13</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.13</guid>
+      <pubDate>Mon, 23 Mar 2026 16:23:52 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.13</description>
+    </item>
+    <item>
+      <title>3.1.12</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.12</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.12</guid>
+      <pubDate>Tue, 17 Mar 2026 11:23:06 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.12</description>
+    </item>
+    <item>
+      <title>3.1.11</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.11</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.11</guid>
+      <pubDate>Sun, 15 Mar 2026 15:18:07 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.11</description>
+    </item>
+    <item>
+      <title>3.1.10</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.10</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.10</guid>
+      <pubDate>Sun, 15 Mar 2026 15:01:19 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.10</description>
+    </item>
+    <item>
+      <title>3.1.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.9</guid>
+      <pubDate>Fri, 13 Mar 2026 09:23:28 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.9</description>
+    </item>
+    <item>
+      <title>3.1.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.8</guid>
+      <pubDate>Thu, 12 Mar 2026 17:42:00 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.8</description>
+    </item>
+    <item>
+      <title>3.1.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.7</guid>
+      <pubDate>Wed, 11 Mar 2026 23:39:22 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.7</description>
+    </item>
+    <item>
+      <title>3.1.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.6</guid>
+      <pubDate>Wed, 11 Mar 2026 11:39:29 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.6</description>
+    </item>
+    <item>
+      <title>3.1.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.5</guid>
+      <pubDate>Tue, 10 Mar 2026 12:31:11 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.5</description>
+    </item>
+    <item>
+      <title>3.1.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.4</guid>
+      <pubDate>Tue, 10 Mar 2026 00:04:49 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.4</description>
+    </item>
+    <item>
+      <title>3.1.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.3</guid>
+      <pubDate>Mon, 09 Mar 2026 14:30:13 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.3</description>
+    </item>
+    <item>
+      <title>3.1.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.2</guid>
+      <pubDate>Sun, 08 Mar 2026 22:20:23 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 3.1.2</description>
+    </item>
+    <item>
+      <title>Release 3.1.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.1.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.1.1</guid>
+      <pubDate>Thu, 30 May 2024 17:20:53 GMT</pubDate>
+      <category>Release</category>
+      <description>Release 3.1.1</description>
+    </item>
+    <item>
+      <title>3.0.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.0.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.0.1</guid>
+      <pubDate>Sun, 28 Apr 2024 22:16:00 GMT</pubDate>
+      <category>Release</category>
+      <description>Version 3.0.1 Released 🚀  This release includes several UX and security improvments. Your backed up config files will no longer clutter up your user-data directory. The security of auth has been ha</description>
+    </item>
+    <item>
+      <title>3.0.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/3.0.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/3.0.0</guid>
+      <pubDate>Sat, 20 Apr 2024 11:44:43 GMT</pubDate>
+      <category>Release</category>
+      <description>Dashy 3.0 has been released!  This version includes some major changes, including: - No more rebuilding 🎉 - Mounting a directory, not a file 😌 - Switch to Non-Root of Port 🔒 - Environmental V</description>
+    </item>
+    <item>
+      <title>2.1.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.1.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.1.2</guid>
+      <pubDate>Sun, 03 Mar 2024 15:37:44 GMT</pubDate>
+      <category>Release</category>
+      <description>It&apos;s been a while (I&apos;m sorry it&apos;s taken so long), but here is the newest release of Dashy, V 2.1.2  All credit for this release should go to @CrazyWolf13, whose done an awesome job at organizing all</description>
+    </item>
+    <item>
+      <title>2.1.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.1.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.1.1</guid>
+      <pubDate>Fri, 01 Jul 2022 18:01:20 GMT</pubDate>
+      <category>Release</category>
+      <description>✨ 2.1.1 Improvements PR 775 Bug Fixes 🐛 - Update APOD widget to use https://apod.as93.net   - 745 by @k073l  - Fixes theme applying bug (774) Improvements ⚡️ - Stop status checks when item destroyed </description>
+    </item>
+    <item>
+      <title>2.1.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.1.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.1.0</guid>
+      <pubDate>Sat, 04 Jun 2022 20:42:30 GMT</pubDate>
+      <category>Release</category>
+      <description>✨ 2.0.9 Adds Multi-Page Support PR 685 - Adds Widgets for AdGuard</description>
+    </item>
+    <item>
+      <title>2.0.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.9</guid>
+      <pubDate>Sat, 21 May 2022 11:29:50 GMT</pubDate>
+      <category>Release</category>
+      <description>✨ 2.0.9 Adds Multi-Page Support PR 663 - Fix KeyCloak API URL (564) - Fix guest has config access (590) - Fix collapsible content in multi-page support (626) - Fix layout and item size buttons ( 6</description>
+    </item>
+    <item>
+      <title>2.0.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.8</guid>
+      <pubDate>Sun, 01 May 2022 21:50:58 GMT</pubDate>
+      <category>Release</category>
+      <description>You requested it.... Multi-page support is here!  As well as your main page, you can now have as many sub-pages as you like. The config file for which, can either be managed locally within Dashy, or</description>
+    </item>
+    <item>
+      <title>2.0.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.7</guid>
+      <pubDate>Thu, 14 Apr 2022 18:29:37 GMT</pubDate>
+      <category>Release</category>
+      <description>⚡️ 2.0.7 Improves handling of Sections and Items PR 595 - Adds functionality for sub-items / item-groups - Creates an item mixin, for reusing functionality - Item width calculated based on parent sect</description>
+    </item>
+    <item>
+      <title>2.0.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.6</guid>
+      <pubDate>Mon, 28 Mar 2022 09:52:17 GMT</pubDate>
+      <category>Release</category>
+      <description>🐛 Fixes user requested issues PR 557 - Allows middle click open new tab, Re: 492 - Implements Max redirects for status checks, Re: 494 - Adds Gitpod config for cloud-ready IDE, Re: 497 - Adss new scr</description>
+    </item>
+    <item>
+      <title>2.0.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.5</guid>
+      <pubDate>Mon, 14 Mar 2022 12:54:57 GMT</pubDate>
+      <category>Release</category>
+      <description>Partially revert 2.0.4, fixing several issues caused by conf.yml not being loaded at startup. This change requires a rebuild of the application when several options under appConfig are changed. Fixes </description>
+    </item>
+    <item>
+      <title>2.0.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.4</guid>
+      <pubDate>Sun, 06 Mar 2022 23:32:45 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 2.0.4</description>
+    </item>
+    <item>
+      <title>2.0.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.3</guid>
+      <pubDate>Mon, 14 Feb 2022 13:50:53 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 2.0.3</description>
+    </item>
+    <item>
+      <title>2.0.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.2</guid>
+      <pubDate>Sat, 05 Feb 2022 01:34:12 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 2.0.2</description>
+    </item>
+    <item>
+      <title>2.0.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.1</guid>
+      <pubDate>Tue, 01 Feb 2022 19:53:19 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 2.0.1</description>
+    </item>
+    <item>
+      <title>Dashy 2.0.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/2.0.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/2.0.0</guid>
+      <pubDate>Sun, 30 Jan 2022 21:52:16 GMT</pubDate>
+      <category>Release</category>
+      <description>Version 2.0.0 of Dashy is now released! The main changes are the introduction of widgets, as well as usability + stability improvements.  Thanks very much to everyone who contributed to this release</description>
+    </item>
+    <item>
+      <title>1.9.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.9</guid>
+      <pubDate>Sun, 23 Jan 2022 00:00:26 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.9</description>
+    </item>
+    <item>
+      <title>1.9.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.8</guid>
+      <pubDate>Fri, 21 Jan 2022 13:55:10 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.8</description>
+    </item>
+    <item>
+      <title>1.9.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.7</guid>
+      <pubDate>Sun, 09 Jan 2022 15:18:53 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.7</description>
+    </item>
+    <item>
+      <title>1.9.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.6</guid>
+      <pubDate>Sat, 01 Jan 2022 01:18:42 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.6</description>
+    </item>
+    <item>
+      <title>1.9.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.5</guid>
+      <pubDate>Wed, 29 Dec 2021 22:55:03 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.5</description>
+    </item>
+    <item>
+      <title>1.9.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.4</guid>
+      <pubDate>Wed, 29 Dec 2021 14:50:57 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.4</description>
+    </item>
+    <item>
+      <title>1.9.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.3</guid>
+      <pubDate>Wed, 01 Dec 2021 21:38:54 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.3</description>
+    </item>
+    <item>
+      <title>1.9.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.2</guid>
+      <pubDate>Wed, 10 Nov 2021 18:42:08 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.2</description>
+    </item>
+    <item>
+      <title>1.9.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.1</guid>
+      <pubDate>Sat, 06 Nov 2021 22:54:36 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.9.1</description>
+    </item>
+    <item>
+      <title>Dashy 1.9.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.9.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.9.0</guid>
+      <pubDate>Sun, 31 Oct 2021 20:52:51 GMT</pubDate>
+      <category>Release</category>
+      <description>✨ New Features - All-new interactive config editor - Option for default opening method, and more target options - Support for single-section view  ⚡️ Improvments - Custom 404 pages, and improved</description>
+    </item>
+    <item>
+      <title>1.8.9</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.9</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.9</guid>
+      <pubDate>Sat, 30 Oct 2021 13:07:23 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.9</description>
+    </item>
+    <item>
+      <title>1.8.8</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.8</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.8</guid>
+      <pubDate>Sat, 23 Oct 2021 00:44:59 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.8</description>
+    </item>
+    <item>
+      <title>1.8.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.7</guid>
+      <pubDate>Fri, 15 Oct 2021 22:12:57 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.7</description>
+    </item>
+    <item>
+      <title>1.8.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.6</guid>
+      <pubDate>Sun, 10 Oct 2021 17:39:10 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.6</description>
+    </item>
+    <item>
+      <title>1.8.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.5</guid>
+      <pubDate>Sat, 02 Oct 2021 19:51:47 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.5</description>
+    </item>
+    <item>
+      <title>1.8.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.4</guid>
+      <pubDate>Tue, 28 Sep 2021 20:15:10 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.4</description>
+    </item>
+    <item>
+      <title>1.8.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.3</guid>
+      <pubDate>Sun, 19 Sep 2021 21:52:52 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.3</description>
+    </item>
+    <item>
+      <title>1.8.2</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.2</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.2</guid>
+      <pubDate>Sun, 19 Sep 2021 13:28:15 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.2</description>
+    </item>
+    <item>
+      <title>1.8.1</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.1</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.1</guid>
+      <pubDate>Sat, 18 Sep 2021 18:18:33 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.8.1</description>
+    </item>
+    <item>
+      <title>Dashy 1.8.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.8.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.8.0</guid>
+      <pubDate>Sun, 12 Sep 2021 21:55:40 GMT</pubDate>
+      <category>Release</category>
+      <description>Release Highlights - Multi-search supporting custom bangs - Improved language detection - Improved error handling - Spanish translations, contributed by @lu4t - Item sort options, alphabetical, m</description>
+    </item>
+    <item>
+      <title>1.7.7</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.7</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.7</guid>
+      <pubDate>Sun, 12 Sep 2021 21:41:44 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.7.7</description>
+    </item>
+    <item>
+      <title>1.7.6</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.6</guid>
+      <pubDate>Sat, 11 Sep 2021 20:24:19 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.7.6</description>
+    </item>
+    <item>
+      <title>1.7.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.5</guid>
+      <pubDate>Sat, 11 Sep 2021 01:14:54 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.7.5</description>
+    </item>
+    <item>
+      <title>1.7.4</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.4</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.4</guid>
+      <pubDate>Fri, 10 Sep 2021 21:44:50 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.7.4</description>
+    </item>
+    <item>
+      <title>1.7.3</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.3</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.3</guid>
+      <pubDate>Thu, 09 Sep 2021 19:10:14 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.7.3</description>
+    </item>
+    <item>
+      <title>Dashy 1.7.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.7.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.7.0</guid>
+      <pubDate>Sun, 29 Aug 2021 21:17:05 GMT</pubDate>
+      <category>Release</category>
+      <description>Release Highlights - Direct web search integration from search bar - Improved loading expereince during initial build - Option for ignoring SSL in local status checks - Improved search, shortcuts </description>
+    </item>
+    <item>
+      <title>Dashy 1.6.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.6.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.6.0</guid>
+      <pubDate>Sun, 15 Aug 2021 21:53:02 GMT</pubDate>
+      <category>Release</category>
+      <description>Thank you to everyone who has supported the development of Dashy over the past few weeks, thanks to you it is coming along well :)  Release Highlights: - Builds a minimal view, which is designed to</description>
+    </item>
+    <item>
+      <title>Dashy 1.5.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.5.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.5.0</guid>
+      <pubDate>Sun, 01 Aug 2021 14:45:35 GMT</pubDate>
+      <category>Release</category>
+      <description>This release contains several new features, improvements and docs, which have been merged over the past few versions. Thank you everyone who&apos;s using and following Dashy, I&apos;ve had a lot of fun develop</description>
+    </item>
+    <item>
+      <title>Dashy 1.4.0</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.4.0</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.4.0</guid>
+      <pubDate>Sun, 18 Jul 2021 20:15:01 GMT</pubDate>
+      <category>Release</category>
+      <description>Dashy 1.4.0 🚀   Dashy is an easy-to-deploy, highly-customizable self-hosted dashboard. It helps you keep your apps and services organized in a single place, and makes launching your apps super quic</description>
+    </item>
+    <item>
+      <title>Dashy Production</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.3.6</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.3.6</guid>
+      <pubDate>Fri, 25 Jun 2021 19:12:43 GMT</pubDate>
+      <category>Release</category>
+      <description>This is the first GitHub release, but Dashy is currently at V 1.3.5, It includes all the basic functionality for reading and displaying sections and items from the YAML config file, basic config edit</description>
+    </item>
+    <item>
+      <title>1.3.5</title>
+      <link>https://github.com/lissy93/dashy/releases/tag/1.3.5</link>
+      <guid isPermaLink="true">https://github.com/lissy93/dashy/releases/tag/1.3.5</guid>
+      <pubDate>Fri, 25 Jun 2021 13:53:24 GMT</pubDate>
+      <category>Tag</category>
+      <description>Tag 1.3.5</description>
+    </item>
+  </channel>
+</rss>

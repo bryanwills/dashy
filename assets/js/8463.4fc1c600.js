@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkdashy=globalThis.webpackChunkdashy||[]).push([[8463],{68463(e,s,l){l.r(s),l.d(s,{default:()=>t});var a=l(20641),o=l(3395);const t=(0,a.pM)({__name:"CollectionCookies",setup:e=>(e,s)=>((0,a.uX)(),(0,a.Wv)(o.A,null,{title:(0,a.k6)(()=>[...s[0]||(s[0]=[(0,a.eW)("Cookies",-1)])]),_:1}))})}}]);
