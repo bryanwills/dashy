@@ -10,7 +10,7 @@ All app configuration is specified in [`/user-data/conf.yml`](https://github.com
   - From the UI, under the config menu there is a JSON editor, with built-in validation, documentation and advanced options
 - **UI Visual Editor** _(3/5 reliability, 5/5 usability)_
   - From the UI, enter the Interactive Edit Mode, then click any part of the page to edit. Changes are previewed live, and then saved to disk
-- **REST API** _(Coming soon)_
+- **REST API** _(see [API docs](/docs/api))_
   - Programmatically edit config either through the command line, using a script or a third-party application
 
 ## Tips
