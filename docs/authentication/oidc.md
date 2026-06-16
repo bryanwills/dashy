@@ -16,11 +16,11 @@ Dashy also supports using a general [OIDC compatible](https://openid.net/connect
 ```yaml
 appConfig:
   disableConfigurationForNonAdmin: true # Hide the config editor from non-admins (recommended)
-  enableGuestAccess: false              # Optional: view the dashboard read-only without signing in
   enableServiceWorker: true             # Optional: enables the PWA and offline support
   enableAuthProxyCompat: true           # Recover the PWA after a session expires (needs the service worker)
   auth:
     enableOidc: true                    # Turn OIDC on
+    enableGuestAccess: false            # Optional: view the dashboard read-only without signing in
     oidc:
       clientId: dashy                    # Client ID from your provider
       endpoint: https://auth.example.com/application/o/dashy/ # The issuer URL, not the .well-known one
@@ -28,6 +28,7 @@ appConfig:
       adminGroup: dashy-admins           # Members of this group are admins
       adminRole: dashy-admin             # Or grant admin by role instead
       enableSilentRenew: true            # Refresh the session in the background before it expires
+      # allowedIssuers: []               # Only for multi-tenant providers to override discovery document
 ```
 
 Because Dashy is a SPA, a [public client](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1) registration with PKCE is needed.
@@ -45,6 +46,20 @@ Dashy works out who's an admin from the id_token. Set `adminGroup` to a group na
 The claim has to be in the id_token, not just the access token. Most providers include it once you ask for the `groups` (or `roles`) scope. For the group check Dashy reads the `groups` claim, plus GitLab's `groups_direct`. For the role check it reads `roles`, plus Keycloak's `realm_access.roles` and `resource_access.<clientId>.roles`.
 
 If your admins aren't being picked up, decode the id_token (paste it into [jwt.io](https://jwt.io)) and check the claim is there.
+
+## Multi-tenant providers
+
+With a multi-tenant provider (e.g. Microsoft Entra's `organizations` / `common` endpoints), the issuer in the token doesn't match the one in the discovery document, so verification fails. Set `allowedIssuers` to the issuer URL(s) you want to accept:
+
+```yaml
+    oidc:
+      clientId: dashy
+      endpoint: 'https://login.microsoftonline.com/organizations/v2.0/'
+      allowedIssuers:
+        - 'https://login.microsoftonline.com/<your-tenant-id>/v2.0'
+```
+
+When set, tokens are accepted only if their `iss` matches one of these (signature, audience and expiry are still checked). Leave it unset for normal single-tenant providers.
 
 ## Guest access
 
