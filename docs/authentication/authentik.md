@@ -18,10 +18,8 @@ Dashy supports using [Authentik](https://goauthentik.io/) as its OIDC provider.
 - [4. Groups and Visibility](#4-groups-and-visibility)
 - [5. Silent token renewal (optional)](#5-silent-token-renewal-optional)
 - [Troubleshooting](#troubleshooting-common-authentik-issues)
+- [Config Example](#config-example)
 - [How it Works](#how-it-works)
-  - [Client side](#client-side)
-  - [Server side](#server-side)
-  - [Visual Overview](#visual-overview)
 
 ## 1. Deploy Authentik
 
@@ -37,6 +35,8 @@ AUTHENTIK_BOOTSTRAP_PASSWORD=change-me-now
 AUTHENTIK_BOOTSTRAP_EMAIL=you@example.com
 AUTHENTIK_BOOTSTRAP_TOKEN=replace-me-with-random-hex
 ```
+
+`AUTHENTIK_TAG` pins the Authentik version. `2024.12` is a tested baseline; any `2024.10`+ release works too (the Invalidation flow field below needs 2024.10 or newer).
 
 <details>
     <summary>Example <code>docker-compose.yml</code></summary>
@@ -124,7 +124,7 @@ First boot runs database migrations and takes a minute or two. Once the `server`
 
 Authentik doesn't expose group membership in the id_token by default. Dashy needs it for the `adminGroup` check and for the `showForKeycloakUsers` / `hideForKeycloakUsers` visibility rules.
 
-1. Go to **Customisation > Property Mappings**
+1. Go to **Customization > Property Mappings**
 2. Click **Create > Scope Mapping**
 3. Set **Name** to `groups`
 4. Set **Scope name** to `groups`
@@ -142,7 +142,7 @@ return {"groups": [g.name for g in request.user.ak_groups.all()]}
 2. Click **Create**, pick **OAuth2/OpenID Provider**, click **Next**
 3. Set **Name** to `Dashy`
 4. Set **Authorization flow** to `default-provider-authorization-implicit-consent` (use `default-provider-authorization-explicit-consent` if you want users to confirm sign-in each time)
-5. Set **Invalidation flow** to `default-provider-invalidation-flow` (required on Authentik 2023.10 and newer)
+5. Set **Invalidation flow** to `default-provider-invalidation-flow` (required on Authentik 2024.10 and newer)
 6. Under **Protocol settings**:
    - **Client type**: `Public`
    - **Client ID**: `dashy`, or leave the auto-generated value and copy it for later
@@ -151,7 +151,7 @@ return {"groups": [g.name for g in request.user.ak_groups.all()]}
      - `https://dashy.example.com/`
    - **Signing Key**: the built-in `authentik Self-signed Certificate` is fine
 7. Expand **Advanced protocol settings**:
-   - Add `openid`, `profile`, `email`, and the `groups` scope you just created to **Scopes**
+   - Add `openid`, `profile`, `email`, and the `groups` scope you just created to **Selected Scopes**
    - Turn **Include claims in id_token** on
 8. Click **Finish**
 
@@ -189,21 +189,32 @@ By default any Authentik user can sign in to Dashy. To limit access to one or mo
 
 1. Go to **Applications > Applications** and open the `Dashy` application
 
+<details>
+<summary>screenshot</summary>
+
 ![Open the Dashy application](https://github.com/user-attachments/assets/613fafe7-881f-4664-a903-945854ac65e2)
+
+</details>
 
 2. Open the **Policy / Group / User Bindings** tab and click **Bind existing policy**
 
+<details>
+<summary>screenshot</summary>
+
 ![Open the bindings tab](https://github.com/user-attachments/assets/10fca15b-e77d-4624-ae03-0ece3910904c)
+
+</details>
 
 3. Switch to the **Group** tab, choose the group that should have access, make sure **Enabled** is on, and click **Create**
 
+<details>
+<summary>screenshot</summary>
+
 ![Bind a group to the application](https://github.com/user-attachments/assets/ebf680ab-696f-4c08-ae89-d73fe92b398f)
 
+</details>
+
 Access is now limited to members of the bound group. Add another binding for each additional group that should be allowed in.
-
-### Summary
-
-Authentik should now be configured, and ready to go!
 
 ---
 
@@ -229,8 +240,10 @@ Where:
 - `auth.enableOidc` - Set the auth mode to OIDC
 - `clientId` - The Client ID from the Authentik provider (exact, case-sensitive)
 - `endpoint` - The OpenID Configuration Issuer URL from the provider page. Use the bare issuer, not the discovery URL; Dashy appends `/.well-known/openid-configuration` itself
-- `adminGroup` - Name of the Authentik group that grants admin in Dashy (matches the `dashy-admins` group above)
+- `adminGroup` - Name of the Authentik group that grants admin in Dashy (matches the `dashy-admins` group above). To use roles instead, set `adminRole`, but Authentik has no `roles` claim by default, so groups are the simpler path here
 - `scope` - Space-separated list of scopes to request. Must include `groups` when `adminGroup` is set, otherwise the id_token won't carry the claim
+
+To let visitors view a read-only dashboard without signing in, add `enableGuestAccess: true` under `auth`; they skip the Authentik login, and admins still get edit access after signing in. See [guest access](/docs/oidc#guest-access) for the details.
 
 Restart Dashy for these changes to take effect.
 
@@ -286,9 +299,13 @@ By default, when your token expires Dashy sends you back through Authentik's log
 
 Dashy adds the `offline_access` scope to its request automatically. Authentik ships an `offline_access` scope mapping by default, so just make sure it's listed under the provider's **Advanced protocol settings > Selected Scopes**. It's off by default, and if a refresh ever fails Dashy falls back to the normal sign-in. See [silent token renewal](/docs/oidc#silent-token-renewal) for the full notes and caveats.
 
+How often renewal fires is set by the provider's **Access Token validity** (and **Refresh Token validity**) under **Advanced protocol settings** in Authentik; the defaults suit most people.
+
 ---
 
 ## Troubleshooting common Authentik Issues
+
+Two places will tell you what went wrong. Client-side problems, like a token Dashy can't use or a renewal that didn't take, are logged to the browser console tagged `SSO` or `OIDC`, so open your browser's DevTools and check the Console tab. Token verification failures show up in the Dashy server logs instead. Check whichever fits what you're seeing.
 
 #### Migrations still running on first boot
 Problem: Authentik returns 502 or never reaches the login page right after `docker compose up`.<br />
@@ -304,7 +321,7 @@ Solution: The URL Dashy is being served from doesn't exactly match what's regist
 
 #### Logged in but config saves return 403
 Problem: User authenticates fine, but saving the dashboard returns 403.<br />
-Solution: The id_token isn't carrying the group claim. Paste the token (from localStorage, key `ID_TOKEN`) into [jwt.io](https://jwt.io) and look for `groups`. If it's missing, the `groups` scope mapping isn't attached to the provider's **Scopes** or **Include claims in id_token** is off. If the claim is there but the user isn't in it, add them to the `dashy-admins` group.
+Solution: The id_token isn't carrying the group claim. Paste the token (from localStorage, key `idToken`) into [jwt.io](https://jwt.io) and look for `groups`. If it's missing, the `groups` scope mapping isn't attached to the provider's **Selected Scopes** or **Include claims in id_token** is off. If the claim is there but the user isn't in it, add them to the `dashy-admins` group.
 
 #### Issuer mismatch behind a reverse proxy
 Problem: Server logs show `unexpected "iss" claim value`. The browser reaches Authentik over HTTPS, but Authentik advertises an HTTP issuer in its discovery document.<br />
@@ -314,21 +331,29 @@ Solution: Set `AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS` on the Authentik server an
 Problem: Server logs show `unexpected "aud" claim value`. Every auth'd API call returns 401.<br />
 Solution: `clientId` in `conf.yml` must exactly match the provider's **Client ID** field. If you let Authentik auto-generate one, copy the exact value (including case) from the provider page.
 
+#### "SSO token is encrypted"
+Problem: The browser console shows `SSO token is encrypted. Dashy needs signed JWT tokens, not encrypted JWE tokens.` and sign-in doesn't stick.<br />
+Solution: The provider has an **Encryption Key** set, so Authentik hands Dashy an encrypted (JWE) token it can't read. Open the Dashy provider, expand **Advanced protocol settings**, clear the **Encryption Key** field so only the **Signing Key** stays set, and save. Dashy needs a signed token, not an encrypted one.
+
 #### Self-signed Authentik certificate rejected
-Problem: Dashy server logs show TLS errors (`self-signed certificate`, `UNABLE_TO_VERIFY_LEAF_SIGNATURE`) when fetching the discovery doc or JWKS.<br />
+Problem: Fetching the discovery doc or JWKS fails and Dashy logs the generic `[auth-oidc] token verification failed: fetch failed`. Underneath that `fetch failed` is a TLS cert rejection (a self-signed or untrusted-CA cert on Authentik's HTTPS endpoint); the OpenSSL reason like `self-signed certificate` sits in the error cause, not the log line.<br />
 Solution: Use a real certificate on the Authentik HTTPS endpoint (Let's Encrypt or your homelab CA), or mount your CA bundle into the Dashy container and set `NODE_EXTRA_CA_CERTS=/path/to/ca.pem`. Authentik's built-in `authentik Self-signed Certificate` is only used to sign tokens; the TLS cert is whatever's terminating HTTPS in front of Authentik.
 
 #### "OIDC signinCallback returned no user"
-Problem: Login submits, Authentik redirects back, then Dashy shows the error toast `OIDC signinCallback returned no user`.<br />
-Solution: The id_token came back without a usable username claim. Confirm `profile` and `email` are in the provider's **Scopes**, that **Include claims in id_token** is on, and that the user has an email or username set in Authentik.
+Problem: Login submits, Authentik redirects back, then the browser console logs `OIDC signinCallback returned no user` and sign-in fails.<br />
+Solution: The id_token came back without a usable username claim. Confirm `profile` and `email` are in the provider's **Selected Scopes**, that **Include claims in id_token** is on, and that the user has an email or username set in Authentik.
 
 #### Logout stuck on a consent screen
 Problem: Clicking Logout sends the user to Authentik's end-session endpoint, which prompts for confirmation and never returns.<br />
 Solution: This is the default behaviour of `default-provider-invalidation-flow`. To skip the prompt, change the provider's **Invalidation flow** to one without a consent stage, or accept the extra click.
 
 #### Token expired / clock skew
-Problem: 401s with `"exp" claim timestamp check failed` or `"iat" claim timestamp check failed`, even just after login.<br />
+Problem: 401s with `"exp" claim timestamp check failed`, even just after login.<br />
 Solution: Dashy allows 30 seconds of drift. Sync clocks on both hosts with NTP. Container clocks follow their host, so it's almost always the host that's drifted.
+
+#### Silent renewal never refreshes the session
+Problem: With `enableSilentRenew: true` the session still drops when the token expires, and the browser console mentions `ensure offline_access is granted`.<br />
+Solution: Authentik isn't issuing a refresh token because the `offline_access` scope isn't granted. Open the Dashy provider, expand **Advanced protocol settings**, add the built-in `offline_access` scope to **Selected Scopes**, and save. Dashy requests `offline_access` on its own, so all Authentik has to do is allow it.
 
 #### Numeric Client ID truncated
 Problem: Audience mismatch when `clientId` in `conf.yml` is a long numeric string.<br />
@@ -344,113 +369,38 @@ Solution: The server reads the auth config only at boot. Restart the Dashy conta
 
 ---
 
+## Config Example
+
+Below is an example of a configured local dashy instance (port 4000) for Authentik.
+
+<details>
+<summary>Screenshots of Dashy config in Authentik</summary>
+
+![](https://pixelflare.cc/alicia/screenshots/authentik-settings-1/w1024)
+![](https://pixelflare.cc/alicia/screenshots/authentik-settings-2/w1024)
+![](https://pixelflare.cc/alicia/screenshots/authentik-settings-3/w1024)
+![](https://pixelflare.cc/alicia/screenshots/authentik-settings-4/w1024)
+![](https://pixelflare.cc/alicia/screenshots/authentik-settings-5/w1024)
+
+</details>
+
+---
+
 ## How it Works
 
-If you're a developer or contributor looking to understand or make changes to Dashy's OIDC implementation, the following outlines how it's wired together.
+Nothing here is specific to Authentik. Dashy speaks standard OIDC, so the same flow works with Keycloak or any other provider; only the config differs.
 
-The same OIDC pipeline backs Authentik, Keycloak, and any other generic OIDC provider. The only Authentik-specific code is your configuration; everything else is shared.
+Here's what happens when you open Dashy with OIDC enabled:
 
-### Client side
+1. Your browser asks the Dashy server for the config. You're not signed in yet, so the server only sends back the auth settings. Your sections, items and URLs stay on the server.
+2. Dashy sees OIDC is enabled and redirects you to Authentik to sign in, using the standard authorization code flow with PKCE.
+3. You enter your credentials (plus MFA if you've set it up). Authentik sends you back to Dashy with a one-time code, which the browser swaps for a signed token proving who you are and which groups you're in.
+4. The browser stores that token and attaches it to every request it makes to the Dashy server.
+5. The server checks each token against Authentik's published signing keys, and makes sure it was issued by your Authentik, for Dashy, and hasn't expired. A valid token gets the full config; no token or a bad one gets sent back to the login flow.
+6. Your Authentik groups ride along inside the token. Being in the `adminGroup` lets you edit and save the config, and groups also power the show/hide visibility rules.
 
-Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/main.js). After the initial `/conf.yml` fetch parses the auth block, `isOidcEnabled()` decides whether to lazily import [`oidc-client-ts`](https://github.com/authts/oidc-client-ts) and call `initOidcAuth()`.
+When the token expires you're bounced back through Authentik for a new one, which is usually instant since you still have a session there. With `enableSilentRenew` on, Dashy refreshes it in the background and you won't notice at all.
 
-[`src/utils/auth/OidcAuth.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/auth/OidcAuth.js) wraps `oidc-client-ts`. On load it inspects the URL: if it sees a `?code=` callback it runs `userManager.signinCallback()` to exchange the code (and PKCE verifier) for tokens, persists the user info, and hard-redirects to `/`. Otherwise it calls `userManager.getUser()`; if there's no usable session it falls through to `userManager.signinRedirect()` to send the browser to Authentik. A short-lived `sessionStorage` guard prevents the redirect loop that would otherwise occur if the IdP returns without a usable user.
+To sign out, use Dashy's Logout control: it clears the stored token and sends you to Authentik's end-session endpoint (see [Logout stuck on a consent screen](#logout-stuck-on-a-consent-screen) if that asks for confirmation).
 
-`persistUserInfo()` writes the raw `id_token`, the user's `groups` and `roles`, a derived `isAdmin` flag, and a username (falling back through `preferred_username`, `email`, and `sub`) to localStorage. The keys (`ID_TOKEN`, `KEYCLOAK_INFO`, `USERNAME`, `ISADMIN`) live in [`src/utils/config/defaults.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/config/defaults.js); the `KEYCLOAK_INFO` name is historical and reused for all OIDC providers, including Authentik.
-
-[`src/utils/auth/getApiAuthHeader.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/auth/getApiAuthHeader.js) builds the Authorization header for every internal API call. It does a client-side `exp` check and returns `null` for missing or expired tokens, so the next request triggers a fresh login rather than a 401.
-
-[`src/utils/IsVisibleToUser.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/IsVisibleToUser.js) reads `KEYCLOAK_INFO` when evaluating `showForKeycloakUsers` and `hideForKeycloakUsers` rules.
-
-### Server side
-
-[`services/auth-oidc.js`](https://github.com/lissy93/dashy/blob/4.1.5/services/auth-oidc.js) contains the entire server-side auth surface, in five small pieces:
-
-- `loadOidcSettings()` reads `auth.oidc` (or `auth.keycloak`) at boot and returns a normalised `{ issuer, clientId, adminGroup, adminRole }`. For generic OIDC providers the `issuer` is whatever you set as `endpoint` in `conf.yml`, verbatim
-- `createOidcMiddleware()` returns a Connect middleware. Permissive on no-token requests so the SPA can bootstrap; otherwise it verifies the Bearer token against the issuer's JWKS using [`jose`](https://github.com/panva/jose). Checks cover signature, issuer (against the canonical value from the discovery doc), audience (must equal `clientId`), and expiry, with a 30-second clock-skew tolerance. Sets `req.auth = { user, isAdmin, claims }` on success, `401` on failure
-- `getIssuerContext()` lazily fetches `.well-known/openid-configuration` on first use and wraps `jwks_uri` in `createRemoteJWKSet`, which handles JWKS caching and on-demand key rotation. The result is memoised per-issuer for the life of the process
-- `deriveIsAdmin()` checks the token's `groups` claim against `adminGroup`, and the top-level `roles` claim against `adminRole` (for Keycloak it also folds in the nested `realm_access.roles` / `resource_access.<clientId>.roles` arrays). Authentik only emits `groups`, so the group path is what's used in practice
-- `maybeBootstrapConfig()` is the stripped-response helper. When auth is configured, guest access is off, and an unauthenticated request hits the root `/conf.yml`, it returns a minimal copy with only `appConfig.auth`, `appConfig.enableServiceWorker`, and a `pageInfo.title` of `Login | <your title>`. Sections, items, hostnames and any other secrets never leave the server
-
-[`services/app.js`](https://github.com/lissy93/dashy/blob/4.1.5/services/app.js) wires it all together. The middleware mounts as `protectConfig` in front of every YAML route and config-mutating route. The `/*.yml` handler sets `Cache-Control: private, no-store` and `Vary: Authorization` whenever auth is configured (so intermediate caches can never mix auth states), then calls `maybeBootstrapConfig`; a stripped result is sent as-is, otherwise `res.sendFile` serves the full file. `POST /config-manager/save` is additionally guarded by `requireAdmin`, which returns `401` if `req.auth` is unset and `403` if `req.auth.isAdmin` is false.
-
-### Visual Overview
-
-<details>
-
-<summary>End-to-end authentication flow</summary>
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User
-    participant Browser as Browser (Dashy SPA)
-    participant Dashy as Dashy Server
-    participant AK as Authentik
-
-    Note over Browser,Dashy: 1. Bootstrap (no token yet)
-    User->>Browser: Open Dashy
-    Browser->>Dashy: GET /conf.yml
-    Dashy-->>Browser: 200 stripped conf<br />(auth block + minimal pageInfo)
-    Browser->>Browser: Parse auth.oidc
-
-    Note over Browser,AK: 2. OIDC login (Authorization Code + PKCE)
-    Browser->>AK: 302 /application/o/authorize/<br />client_id, code_challenge, redirect_uri
-    User->>AK: Submit credentials
-    AK-->>Browser: 302 back with ?code=AUTH_CODE
-    Browser->>AK: POST /application/o/token/<br />(code + code_verifier)
-    AK-->>Browser: id_token + access_token
-    Browser->>Browser: Store tokens in localStorage<br />hard reload to /
-
-    Note over Browser,Dashy: 3. Authenticated read
-    Browser->>Dashy: GET /conf.yml<br />Authorization: Bearer id_token
-    Dashy->>AK: Fetch discovery + JWKS<br />(lazy on first call, then cached)
-    AK-->>Dashy: openid-configuration + JWKS
-    Dashy->>Dashy: Verify signature / issuer / audience / expiry
-    Dashy-->>Browser: 200 full conf.yml
-
-    Note over Browser,Dashy: 4. Write request (admin only)
-    Browser->>Dashy: POST /config-manager/save<br />Authorization: Bearer id_token
-    Dashy->>Dashy: Verify token, derive isAdmin from<br />adminGroup claim
-    alt isAdmin
-        Dashy-->>Browser: 200 saved
-    else not admin
-        Dashy-->>Browser: 403 Forbidden
-    end
-```
-
-</details>
-
-<details>
-
-<summary>Server-side request handling</summary>
-
-```mermaid
-flowchart TD
-    Req([Incoming request to Dashy server])
-    Req --> Bearer{Authorization:<br />Bearer present?}
-
-    Bearer -- No --> NoAuth[req.auth unset<br />pass through]:::neutral
-    Bearer -- Yes --> Verify[/Verify JWT against cached JWKS:<br />signature · issuer · audience · expiry/]
-    Verify --> Valid{Valid?}
-    Valid -- No --> R401Bad[/401 Unauthorized/]:::err
-    Valid -- Yes --> SetAuth[req.auth = user + isAdmin<br />derived from claims]:::ok
-
-    NoAuth --> Route{Endpoint}
-    SetAuth --> Route
-
-    Route -- "GET /conf.yml" --> ConfGate{req.auth?}
-    ConfGate -- No --> Strip[/200 stripped conf<br />auth + minimal pageInfo/]:::ok
-    ConfGate -- Yes --> Full[/200 full conf.yml/]:::ok
-
-    Route -- "POST /config-manager/save" --> SaveGate{req.auth<br />and isAdmin?}
-    SaveGate -- No req.auth --> R401Save[/401 Unauthorized/]:::err
-    SaveGate -- Not admin --> R403[/403 Forbidden/]:::err
-    SaveGate -- Admin --> Saved[/200 saved/]:::ok
-
-    classDef ok fill:#bbf7d0,stroke:#16a34a,color:#14532d
-    classDef err fill:#fecaca,stroke:#dc2626,color:#7f1d1d
-    classDef neutral fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
-```
-
-</details>
+If you want the implementation details, the client side lives in `src/utils/auth/OidcAuth.js` and the server-side token verification in `services/auth-oidc.js`.
