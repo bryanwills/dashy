@@ -6,7 +6,7 @@ const injectDeploymentGrid = require('./plugins/inject-deployment-grid');
 
 /* External URLs */
 const externalUrl = {
-  editUrl: 'https://github.com/Lissy93/dashy/edit/master/docs/',
+  editUrl: 'https://github.com/Lissy93/dashy/edit/master/',
   licenseUrl: 'https://github.com/Lissy93/dashy/blob/master/LICENSE',
   aliciaUrl: 'https://aliciasykes.com',
   dashyUrl: 'https://dashy.to',
