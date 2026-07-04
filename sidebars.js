@@ -14,19 +14,12 @@ const path = require('path');
 
 const DOCS_DIR = path.join(__dirname, 'docs');
 
-// 'backup-restore' -> 'Backup Restore'
 const labelFor = (id) => id
   .split('-')
   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
   .join(' ');
 
-/**
- * Renders a doc as an expandable category when a same-named directory of
- * sub-pages exists (e.g. docs/authentication/, docs/deployment/), and as a
- * plain doc link otherwise. A directory only counts as having sub-pages if
- * it contains markdown files other than a readme (docs/showcase/ holds just
- * images and a readme stub, so it stays a plain link).
- */
+// Docs with a same-named folder of sub-pages become expandable categories (readme stubs don't count)
 const withSubPages = (id) => {
   if (typeof id !== 'string') return id;
   const dir = path.join(DOCS_DIR, id);
