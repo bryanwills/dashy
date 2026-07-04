@@ -2,6 +2,7 @@ const { themes } = require('prism-react-renderer');
 const darkCodeTheme = themes.dracula;
 const lightCodeTheme = themes.github;
 const remarkGithubAlerts = require('./plugins/remark-github-alerts');
+const injectDeploymentGrid = require('./plugins/inject-deployment-grid');
 
 /* External URLs */
 const externalUrl = {
@@ -69,10 +70,6 @@ module.exports = {
         },
       }),
     },
-    {
-      tagName: 'link',
-      attributes: { rel: 'manifest', href: '/manifest.json' },
-    },
     // RSS feed autodiscovery
     {
       tagName: 'link',
@@ -83,14 +80,21 @@ module.exports = {
         href: '/rss.xml',
       },
     },
-    {
-      tagName: 'meta',
-      attributes: { name: 'theme-color', content: '#54bff7' },
-    },
   ],
   plugins: [
     'docusaurus-plugin-sass',
     require.resolve('./plugins/github-data'),
+    [
+      '@docusaurus/plugin-pwa',
+      {
+        offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString'],
+        pwaHead: [
+          { tagName: 'link', rel: 'manifest', href: '/manifest.json' },
+          { tagName: 'meta', name: 'theme-color', content: '#54bff7' },
+          { tagName: 'link', rel: 'apple-touch-icon', href: '/img/dashy.png' },
+        ],
+      },
+    ],
   ],
   themes: [
     [
@@ -104,6 +108,12 @@ module.exports = {
     '@docusaurus/theme-mermaid',
   ],
   themeConfig: {
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
+    },
     metadata: [
       { name: 'keywords', content: 'dashy, dashboard, homelab, self-hosted, docker, homepage' },
       { property: 'og:title', content: 'Dashy — The Ultimate Homepage for your Homelab' },
@@ -124,9 +134,11 @@ module.exports = {
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,
+      additionalLanguages: ['bash', 'ini', 'toml', 'nix'],
     },
     // Top Navigation Bar
     navbar: {
+      hideOnScroll: true,
       title: 'Dashy',
       logo: {
         alt: 'Dashy Logo',
@@ -214,7 +226,8 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: externalUrl.editUrl,
           showLastUpdateTime: true,
-          beforeDefaultRemarkPlugins: [remarkGithubAlerts],
+          showLastUpdateAuthor: true,
+          beforeDefaultRemarkPlugins: [remarkGithubAlerts, injectDeploymentGrid],
         },
         sitemap: {
           changefreq: 'weekly',

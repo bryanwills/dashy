@@ -1,0 +1,120 @@
+.wrapper {
+  margin-bottom: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.intro {
+  margin: 0;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.filter {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    border-color: var(--primary);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 0.6rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.35rem 0.6rem;
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--text-color);
+  background: transparent;
+  transition: all 0.2s ease;
+
+  img {
+    border-radius: 6px;
+  }
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--ifm-hover-overlay);
+    box-shadow: var(--feature-img-shadow);
+    text-decoration: none;
+    color: var(--primary);
+    transform: translateY(-3px);
+
+    .external {
+      opacity: 1;
+    }
+  }
+}
+
+.name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.official {
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 0.4rem;
+  border-radius: 1rem;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 0.6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.external {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.45rem;
+  opacity: 0;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease;
+}
+
+.fallbackIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+

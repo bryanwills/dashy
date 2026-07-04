@@ -1,0 +1,21 @@
+.getStartedSection {
+  background: var(--hero-background);
+  padding: 3rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.inner {
+  width: 80%;
+  margin: 0.5rem auto;
+}
+
+.heading {
+  font-size: 2rem;
+  color: var(--text-color);
+}
+
+@media (max-width: 966px) {
+  .inner {
+    width: 100%;
+  }
+}

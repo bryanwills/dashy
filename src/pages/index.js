@@ -5,6 +5,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 import HomePageHeader from '../components/HomePageHeader';
 import HomePageFeatures from '../components/HomepageFeatures';
+import GetStarted from '../components/GetStarted';
 import Authors from '../components/Authors';
 import Stats from '../components/Stats';
 
@@ -23,6 +24,7 @@ export default function Home() {
       <Stats />
       <HomePageFeatures />
       <main id="top">
+        <GetStarted />
       </main>
       <Authors />
     </Layout>
