@@ -90,6 +90,7 @@ Dashy has support for displaying dynamic content in the form of widgets. There a
   - [Resource Usage Alerts](#resource-usage-alerts)
   - [Public & Private IP](#ip-address)
   - [CPU Temperature](#cpu-temp)
+  - [GPU](#gpu)
   - [Compact Metrics](#compact-metrics)
 - **[Dynamic Widgets](#dynamic-widgets)**
   - [Iframe Widget](#iframe-widget)
@@ -3174,6 +3175,31 @@ You'll need to enable the sensors plugin to use this widget, using: `--enable-pl
 
 ```yaml
 - type: gl-cpu-temp
+  options:
+    hostname: http://192.168.130.2:61208
+    units: C
+```
+
+---
+
+### GPU
+
+Displays usage, memory and temperature for each NVIDIA GPU, plus fan speed where available.
+
+Note: This widget uses the [`gpu`](https://github.com/nicolargo/glances/tree/develop/glances/plugins/gpu) plugin, which requires the `py3nvml` library and is limited to NVIDIA chipsets.
+
+<p align="center"><img width="400" src="https://pixelflare.cc/alicia/dashy/glances-gpu" /></p>
+
+#### Options
+
+**Field** | **Type** | **Required** | **Description**
+--- | --- | --- | ---
+**`units`** | `string` |  _Optional_ | Use `C` to display temperatures in Celsius or `F` to use Fahrenheit. Defaults to `C`.
+
+#### Example
+
+```yaml
+- type: gl-gpu
   options:
     hostname: http://192.168.130.2:61208
     units: C
