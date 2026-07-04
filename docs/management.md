@@ -21,6 +21,7 @@ _The following article is a primer on managing self-hosted apps. It covers every
 - [Setting Headers](#setting-headers)
 - [Remote Access](#remote-access)
 - [Custom Domain](#custom-domain)
+- [Verifying Releases](#verifying-releases)
 - [Securing Containers](#container-security)
 - [Web Server Configuration](#web-server-configuration)
 - [Running a Modified App](#running-a-modified-version-of-the-app)
@@ -682,6 +683,29 @@ dashy.example.com {
 ```
 
 For more info, [this guide](https://thehomelab.wiki/books/dns-reverse-proxy/page/create-domain-records-to-point-to-your-home-server-on-cloudflare-using-nginx-progy-manager) on Setting up Domains with NGINX Proxy Manager and CloudFlare may be useful.
+
+****[⬆️ Back to Top](#)****
+
+---
+
+## Verifying Releases
+
+Everything Dashy publishes can be verified, so you can check that what you're running is what our CI actually built.
+
+**Docker images**: Every image pushed to GHCR has a signed SBOM (software bill of materials) and build provenance attestation attached. Verify with the [GitHub CLI](https://cli.github.com/):
+
+```bash
+gh attestation verify oci://ghcr.io/lissy93/dashy:latest --owner lissy93
+```
+
+**GitHub releases (non-Docker)**: Each [release](https://github.com/Lissy93/dashy/releases) includes a pre-built tarball, along with a SHA256 checksum and its own provenance attestation. To check your download:
+
+```bash
+sha256sum -c dashy-<version>.tar.gz.sha256
+gh attestation verify dashy-<version>.tar.gz --owner lissy93
+```
+
+If verification passes, the artifact was built by our GitHub Actions workflow, from the Dashy repo, and hasn't been tampered with since.
 
 ****[⬆️ Back to Top](#)****
 
