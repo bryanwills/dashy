@@ -1,13 +1,13 @@
 # Docker
 
 Docker is the recommended way of running Dashy.
-We have light-weight multi-arch (amd64, arm64 and arm/v7) images published to DockerHub ([`lissy93/dashy`](https://hub.docker.com/r/lissy93/dashy)) and GHCR ([`ghcr.io/lissy93/dashy`](https://github.com/lissy93/dashy/pkgs/container/dashy)) with full semver tags.
+We have light-weight multi-arch (amd64 and arm64) images published to DockerHub ([`lissy93/dashy`](https://hub.docker.com/r/lissy93/dashy)) and GHCR ([`ghcr.io/lissy93/dashy`](https://github.com/lissy93/dashy/pkgs/container/dashy)) with full semver tags.
 
 The container runs on port 8080 (can be overridden with PORT). Your config (`conf.yml`) and any other assets (icons, styles, themes, fonts, scripts, etc) will live in `/app/user-data` in the container.
 
 **Container Info**: [
-![Docker Supported Architecture](https://img.shields.io/badge/Architectures-amd64%20|%20arm32v7%20|%20arm64v8-6ba6e5)
-![Docker Base Image](https://img.shields.io/badge/Base_Image-node%3A22--alpine-6ba6e5)
+![Docker Supported Architecture](https://img.shields.io/badge/Architectures-amd64%20|%20arm64v8-6ba6e5)
+![Docker Base Image](https://img.shields.io/badge/Base_Image-node%3A24--alpine-6ba6e5)
 ![Docker Hosted on](https://img.shields.io/badge/Hosted_on-DockerHub%20%26%20GHCR-6ba6e5)
 ](https://hub.docker.com/r/lissy93/dashy)<br />
 **Status**:
@@ -45,7 +45,7 @@ Explanation of the above options:
 
 Notes:
 - Dashy is also available through GHCR: `docker pull ghcr.io/lissy93/dashy:latest`
-- The image is multi-arch, so the same tag works on amd64, arm64, and arm/v7 (Raspberry Pi 2+). Docker selects the right variant for your host automatically.
+- The image is multi-arch, so the same tag works on amd64 and arm64. Docker selects the right variant for your host automatically.
 - Published tags: `latest`, exact versions (e.g. `4.3.9`), and rolling minor/major tags (`4.3`, `4.x`). See [available tags](https://hub.docker.com/r/lissy93/dashy/tags)
 - The container runs as the `node` user (uid 1000). If your mounted `user-data` is owned by a different uid, you may hit permission errors. Fix this with `chown`, or run with `--user "$(id -u):$(id -g)"`
 

@@ -92,7 +92,7 @@ This runs a series of checks against the PR. A path-filter step first works out 
 
 > The Docker workflow builds and publishes the Docker image.
 
-Uses our [`Dockerfile`](https://github.com/lissy93/dashy/blob/master/Dockerfile). This is a multi-arch (amd64, arm64, armv7) with each run as a matrix. The image is published to both GHCR ([`ghcr.io/lissy93/dashy`](https://github.com/lissy93/dashy/pkgs/container/dashy)) and DockerHub ([`lissy93/dashy`](https://hub.docker.com/r/lissy93/dashy/)). It also runs a trivy security scan, and if critical issues are present the scheduled job will fail, and results published under the Security tab. The job also attests both the build provenance and SBOM, which are published alongside the image. The Docker tags are computed from the values in the Dockerfile.
+Uses our [`Dockerfile`](https://github.com/lissy93/dashy/blob/master/Dockerfile). This is a multi-arch (amd64, arm64) build, with each run as a matrix. The image is published to both GHCR ([`ghcr.io/lissy93/dashy`](https://github.com/lissy93/dashy/pkgs/container/dashy)) and DockerHub ([`lissy93/dashy`](https://hub.docker.com/r/lissy93/dashy/)). It also runs a trivy security scan, and if critical issues are present the scheduled job will fail, and results published under the Security tab. The job also attests both the build provenance and SBOM, which are published alongside the image. The Docker tags are computed from the values in the Dockerfile.
 
 | | |
 |---|---|

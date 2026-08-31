@@ -39,16 +39,17 @@ The following file provides a reference of all supported configuration options.
     - [`headerAuth`](#appconfigauthheaderauth-optional) - Auth config for HeaderAuth
 - [**`sections`**](#section) - List of sections
   - [`displayData`](#sectiondisplaydata-optional) - Section display settings
-    - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
+    - [`show/hideForGroups` and `show/hideForRoles`](#showforgroups-hideforgroups-showforroles-and-hideforroles) - Set group/role controls
   - [`icon`](#sectionicon-and-sectionitemicon) - Icon for a section
   - [`items`](#sectionitem) - List of items
     - [`icon`](#sectionicon-and-sectionitemicon) - Icon for an item
     - [`displayData`](#itemdisplaydata-optional) - Item display settings
-      - [`show/hideForKeycloakUsers`](#sectiondisplaydatahideforkeycloakusers-sectiondisplaydatashowforkeycloakusers-itemdisplaydatahideforkeycloakusers-and-itemdisplaydatashowforkeycloakusers) - Set user controls
+      - [`show/hideForGroups` and `show/hideForRoles`](#showforgroups-hideforgroups-showforroles-and-hideforroles) - Set group/role controls
   - [`widgets`](#sectionwidgets-optional) - List of widgets
 - [**Notes**](#notes)
   - [Editing Config through the UI](#editing-config-through-the-ui)
   - [About YAML](#about-yaml)
+  - [Schema Validation in your Editor](#schema-validation-in-your-editor)
   - [Config Saving Methods](#config-saving-methods)
   - [Preventing Changes](#preventing-changes)
   - [Example](#example)
@@ -156,14 +157,6 @@ For more info, see the[Multi-Page docs](/docs/pages-and-sections#multi-page-supp
 
 ## `appConfig.auth` _(optional)_
 
-> [!NOTE]
-> Since the auth is initiated in the main app entry point (for security), a rebuild is required to apply changes to the auth configuration.
-> Run `yarn build` in the root directory, then restart the server.
-
-> [!WARNING]
-> Built-in auth should **not be used** for security-critical applications, or if your Dashy instance is publicly accessible.
-> For these, it is recommended to use an [alternate authentication method](/docs/authentication#alternative-authentication-methods).
-
 **Field** | **Type** | **Required**| **Description**
 --- | --- | --- | ---
 **`users`** | `array` | _Optional_ | An array of objects containing usernames and hashed passwords. If this is not provided, then authentication will be off by default, and you will not need any credentials to access the app. See [`appConfig.auth.users`](#appconfigauthusers-optional). <br />**Note** this method of authentication is handled on the client side, so for security critical situations, it is recommended to use an [alternate authentication method](/docs/authentication#alternative-authentication-methods).
@@ -174,6 +167,7 @@ For more info, see the[Multi-Page docs](/docs/pages-and-sections#multi-page-supp
 **`enableOidc`** | `boolean` | _Optional_ | If set to `true`, then authentication using OIDC will be enabled. Note that you need to have a configured OIDC server and configure it with `auth.oidc`. Defaults to `false`
 **`oidc`** | `object` | _Optional_ | Config options to point Dash to your OIDC configuration. Request `enableOidc: true`. See [`auth.oidc`](#appconfigauthoidc-optional) for more info
 **`enableGuestAccess`** | `boolean` | _Optional_ | When set to `true`, an unauthenticated user will be able to access the dashboard, with read-only access, without having to login. Requires `auth.users` to be configured. Defaults to `false`.
+**`logoutRedirectUrl`** | `string` | _Optional_ | URL to redirect the user to after logging out (useful with [header auth](/docs/authentication/header-auth#logging-out), where you also need to end the session on your auth proxy)
 
 For more info, see the **[Authentication Docs](/docs/authentication)**
 
@@ -219,8 +213,11 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 **`adminRole`** | `string` | _Optional_ | The role that will be considered as admin.
 **`adminGroup`** | `string` | _Optional_ | The group that will be considered as admin.
 **`scope`** | `string` | Required | The scope(s) to request from the OIDC provider
+**`showLoginPage`** | `boolean` | _Optional_ | Set to `true` to redirect to Dashy's login page, instead of your OIDC auth page
 **`enableSilentRenew`** | `boolean` | _Optional_ | If set to `true`, your session is silently renewed in the background before it expires (only works for providers which support the `offline_access` scope)
+**`postLogoutRedirectUri`** | `string` | _Optional_ | URL to send users back to after logging out at the provider (sent as `post_logout_redirect_uri`). Must be registered as a valid post-logout redirect URI with your provider. If unset, no redirect is requested
 **`allowedIssuers`** | `array` | _Optional_ | List of issuer URLs to accept tokens from. Needed for multi-tenant providers (e.g. Microsoft Entra) where the token issuer differs from the configured `endpoint`. If unset, the issuer from the discovery document is used
+**`disableServerSideCheck`** | `boolean` | _Optional_ | If `true`, the server skips token verification and endpoint protection, so OIDC is client-side only. Not recommended. Defaults to `false`
 
 ****[⬆️ Back to Top](#)****
 
@@ -301,8 +298,10 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 **`hideForUsers`** | `string[]` | _Optional_ | Current item will be visible to all users, except for those specified in this list
 **`showForUsers`** | `string[]` | _Optional_ | Current item will be hidden from all users, except for those specified in this list
 **`hideForGuests`** | `boolean` | _Optional_ | Current item will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
-**`hideForKeycloakUsers`** | `object`  | _Optional_ | Current item will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current item will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
+**`hideForGroups`** | `string[]` | _Optional_ | Current item will be visible to all users, except for those in any of these SSO groups. See [Group and Role Controls](#showforgroups-hideforgroups-showforroles-and-hideforroles)
+**`showForGroups`** | `string[]` | _Optional_ | Current item will be hidden from all users, except for those in one or more of these SSO groups
+**`hideForRoles`** | `string[]` | _Optional_ | Current item will be visible to all users, except for those with any of these SSO roles
+**`showForRoles`** | `string[]` | _Optional_ | Current item will be hidden from all users, except for those with one or more of these SSO roles
 **`hideFromWorkspace`** | `boolean` | _Optional_ | Current item will be visible in the default view but not in the Workspace view sidebar. Defaults to `false`
 **`hideFromHomepage`** | `boolean` | _Optional_ | If `true`, item is hidden from the home and minimal views until matched by a search. Still visible in workspace, edit mode and single-section view. Defaults to `false`
 
@@ -340,8 +339,10 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 **`hideForUsers`** | `string[]` | _Optional_ | Current section will be visible to all users, except for those specified in this list
 **`showForUsers`** | `string[]` | _Optional_ | Current section will be hidden from all users, except for those specified in this list
 **`hideForGuests`** | `boolean` | _Optional_ | Current section will be visible for logged in users, but not for guests (see `appConfig.enableGuestAccess`). Defaults to `false`
-**`hideForKeycloakUsers`** | `object`  | _Optional_ | Current section will be visible to all keycloak users, except for those configured via these groups and roles. See `hideForKeycloakUsers`
-**`showForKeycloakUsers`** | `object`  | _Optional_ | Current section will be hidden from all keycloak users, except for those configured via these groups and roles. See `showForKeycloakUsers`
+**`hideForGroups`** | `string[]` | _Optional_ | Current section will be visible to all users, except for those in any of these SSO groups. See [Group and Role Controls](#showforgroups-hideforgroups-showforroles-and-hideforroles)
+**`showForGroups`** | `string[]` | _Optional_ | Current section will be hidden from all users, except for those in one or more of these SSO groups
+**`hideForRoles`** | `string[]` | _Optional_ | Current section will be visible to all users, except for those with any of these SSO roles
+**`showForRoles`** | `string[]` | _Optional_ | Current section will be hidden from all users, except for those with one or more of these SSO roles
 **`hideFromWorkspace`** | `boolean` | _Optional_ | Current section will be visible in the default view but not in the Workspace view sidebar. Defaults to `false`
 
 ****[⬆️ Back to Top](#)****
@@ -354,12 +355,29 @@ For more info, see the **[Authentication Docs](/docs/authentication)**
 
 ****[⬆️ Back to Top](#)****
 
-## `section.displayData.hideForKeycloakUsers`, `section.displayData.showForKeycloakUsers`, `item.displayData.hideForKeycloakUsers` and `item.displayData.showForKeycloakUsers`
+## `showForGroups`, `hideForGroups`, `showForRoles` and `hideForRoles`
+
+When using an SSO provider (Keycloak, or any OIDC provider that includes `groups` / `roles` claims in the id_token), pages, sections and items can be shown or hidden based on the user's groups and roles. Set any of these under the `displayData` of a page, section or item:
 
 **Field** | **Type**   | **Required**| **Description**
 --- |------------| --- | ---
-**`groups`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the groups in this list
-**`roles`** | `string[]` | _Optional_ | Current Section or Item will be hidden or shown based on the user having any of the roles in this list
+**`showForGroups`** | `string[]` | _Optional_ | Hidden from all users, except those in one or more of these groups
+**`hideForGroups`** | `string[]` | _Optional_ | Hidden from users in any of these groups
+**`showForRoles`** | `string[]` | _Optional_ | Hidden from all users, except those with one or more of these roles
+**`hideForRoles`** | `string[]` | _Optional_ | Hidden from users with any of these roles
+
+For example:
+
+```yaml
+sections:
+  - name: Admin Tools
+    displayData:
+      showForGroups: [admins]
+    items:
+      - title: Hidden from interns
+        displayData:
+          hideForGroups: [interns]
+```
 
 ****[⬆️ Back to Top](#)****
 
@@ -384,6 +402,26 @@ Config can be modified directly through the UI, and then written to disk, or app
 ### About YAML
 
 If you're new to YAML, it's pretty straight-forward. The format is exactly the same as that of JSON, but instead of using curly braces, structure is denoted using whitespace. This [quick guide](https://linuxhandbook.com/yaml-basics/) should get you up to speed in a few minutes, for more advanced topics take a look at this [Wikipedia article](https://en.wikipedia.org/wiki/YAML).
+
+### Schema Validation in your Editor
+
+Dashy's config is described by a [JSON schema](https://github.com/Lissy93/dashy/blob/master/src/utils/config/ConfigSchema.json) (and served up at `[your-dashy-instance.local]/schema.json`).
+
+Most editors can use this to give you validation, auto-complete and inline docs as you type, so long as you have the `$schema` key pointing to the schema URL.
+
+If you have the [YAML Language Server](https://github.com/redhat-developer/yaml-language-server) in your editor (which comes with the YAML extension), then you can also add the schema directly. E.g. for VS Code, put the following in your `settings.json`.
+
+```json
+{
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/Lissy93/dashy/master/src/utils/config/ConfigSchema.json": ["conf.yml", "user-data/*.yml"]
+  }
+}
+```
+
+The built-in YAML editor (under Config --> Edit Config) also has live validation and auto-complete from the schema.
+
+<img width="700" src="https://pixelflare.cc/alicia/dashy/yaml-editor" alt="YAML editor screenshot" />
 
 ### Config Saving Methods
 

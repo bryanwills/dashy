@@ -271,30 +271,26 @@ For example, to make any given section only visible to admins, simply add the fo
 
 ```yaml
 displayData:
-  showForKeycloakUsers:
-    roles:
-      - dashy-admin # ID of the admin role you created earlier
+  showForRoles:
+    - dashy-admin # ID of the admin role you created earlier
 ```
 
 Keycloak server administration and configuration is a deep topic; please refer to the [server admin guide](https://www.keycloak.org/docs/latest/server_admin/index.html#assigning-permissions-and-access-using-roles-and-groups) to see details about creating and assigning roles and groups.
 
-Once you have groups or roles assigned to users you can configure access under each section or item `displayData.showForKeycloakUsers` and `displayData.hideForKeycloakUsers`.
+Once you have groups or roles assigned to users you can configure access under each section or item, using `showForGroups`, `hideForGroups`, `showForRoles` and `hideForRoles` within `displayData`.
 
-Both show and hide configurations accept a list of `groups` and `roles` that limit access. If a users data matches one or more items in these lists they will be allowed or excluded as defined.
+Each accepts a list of group or role names that limit access. If a users data matches one or more items in these lists they will be allowed or excluded as defined.
 
 ```yaml
 sections:
   - name: DeveloperResources
     displayData:
-      showForKeycloakUsers:
-        roles: ['canViewDevResources']
-      hideForKeycloakUsers:
-        groups: ['ProductTeam']
+      showForRoles: ['canViewDevResources']
+      hideForGroups: ['ProductTeam']
     items:
       - title: Not Visible for developers
         displayData:
-          hideForKeycloakUsers:
-            groups: ['DevelopmentTeam']
+          hideForGroups: ['DevelopmentTeam']
 ```
 
 ---
@@ -381,7 +377,7 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 
 [`src/utils/auth/getApiAuthHeader.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/auth/getApiAuthHeader.js) builds the Authorization header for every internal API call. It does a client-side `exp` check and returns `null` for missing or expired tokens, so the next request triggers a fresh login rather than a 401.
 
-The localStorage keys (`ID_TOKEN`, `KEYCLOAK_INFO`, `USERNAME`, `ISADMIN`) live in [`src/utils/config/defaults.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/config/defaults.js). [`src/utils/IsVisibleToUser.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/IsVisibleToUser.js) reads `KEYCLOAK_INFO` when evaluating `showForKeycloakUsers` and `hideForKeycloakUsers` rules.
+The localStorage keys (`ID_TOKEN`, `KEYCLOAK_INFO`, `USERNAME`, `ISADMIN`) live in [`src/utils/config/defaults.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/config/defaults.js). [`src/utils/IsVisibleToUser.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/IsVisibleToUser.js) reads `KEYCLOAK_INFO` when evaluating `show`/`hideForGroups` and `show`/`hideForRoles` rules.
 
 ### Server side
 

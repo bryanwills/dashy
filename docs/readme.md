@@ -33,6 +33,7 @@
 
 ## Misc
 
-- [Privacy & Security](/docs/privacy) - List of requests, potential issues, and security resources
+- [Privacy](/docs/privacy) - List of all network requests and data storage
+- [Security](/docs/security) - Security features, threat model, and hardening resources
 - [License](https://github.com/Lissy93/dashy/blob/master/LICENSE) - Copy of the MIT License
 - [Code of Conduct](https://github.com/Lissy93/dashy/blob/master/.github/CODE_OF_CONDUCT) - Contributor Covenant Code of Conduct

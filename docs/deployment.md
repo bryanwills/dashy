@@ -66,7 +66,7 @@ Once you've got Dashy up and running, you'll want to configure it with your own 
 ## Requirements
 
 ### Architecture
-The pre-built Docker image runs on `amd64`, `arm64` and `armv7` (`armv6` is not supported).
+The pre-built Docker image runs on `amd64` and `arm64` (32-bit `armv7` and `armv6` are not supported). If you need armv7, pin an older release such as `lissy93/dashy:4.4.10`.
 
 ### System Resources
 - CPU: any single core, x86-64 or ARM

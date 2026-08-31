@@ -246,32 +246,28 @@ When you load Dashy, you'll be redirected to Authelia's login page. After signin
 
 ## 4. Groups and Visibility
 
-Once group membership is in the id_token, you can use it to hide or show pages, sections and items. The property name is `hideForKeycloakUsers` / `showForKeycloakUsers` (the name is historical; it works for any OIDC provider, including Authelia).
+Once group membership is in the id_token, you can use it to hide or show pages, sections and items, with `showForGroups` and `hideForGroups` under `displayData`.
 
 To make an Admin section visible only to members of `admins`:
 
 ```yaml
 displayData:
-  showForKeycloakUsers:
-    groups:
-      - admins
+  showForGroups:
+    - admins
 ```
 
-Both `showForKeycloakUsers` and `hideForKeycloakUsers` accept lists of `groups` and `roles`. If a user matches an entry they're allowed or excluded as defined.
+Both `showForGroups` and `hideForGroups` accept a list of group names (`showForRoles` / `hideForRoles` do the same for a `roles` claim). If a user matches an entry they're allowed or excluded as defined.
 
 ```yaml
 sections:
   - name: Internal Tools
     displayData:
-      showForKeycloakUsers:
-        groups: ['admins']
-      hideForKeycloakUsers:
-        groups: ['users']
+      showForGroups: ['admins']
+      hideForGroups: ['users']
     items:
       - title: Hidden from interns
         displayData:
-          hideForKeycloakUsers:
-            groups: ['interns']
+          hideForGroups: ['interns']
 ```
 
 ---
@@ -389,7 +385,7 @@ Boot starts in [`src/main.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/m
 
 [`src/utils/auth/getApiAuthHeader.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/auth/getApiAuthHeader.js) builds the Authorization header for every internal API call. It does a client-side `exp` check and returns `null` for missing or expired tokens, so the next request triggers a fresh login rather than a 401.
 
-[`src/utils/IsVisibleToUser.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/IsVisibleToUser.js) reads `KEYCLOAK_INFO` when evaluating `showForKeycloakUsers` and `hideForKeycloakUsers` rules.
+[`src/utils/IsVisibleToUser.js`](https://github.com/lissy93/dashy/blob/4.1.5/src/utils/IsVisibleToUser.js) reads `KEYCLOAK_INFO` when evaluating `show`/`hideForGroups` and `show`/`hideForRoles` rules.
 
 ### Server side
 

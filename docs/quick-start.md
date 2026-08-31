@@ -30,7 +30,7 @@ Your dashboard should now be up and running at `http://localhost:8080` (or your 
 
 Dashy is also available via GHCR (`ghcr.io/lissy93/dashy`).<br />
 You can either use `:latest` or pin to specific versions (like `4.0.0`).<br />
-All images are multi-arch (works on amd64, arm64, and arm/v7).<br />
+All images are multi-arch (works on amd64 and arm64).<br />
 To use with compose, see our sample [`docker-compose.yml`](https://github.com/lissy93/dashy/blob/master/docker-compose.yml).<br />
 Once up and running, check the [configuring reference](https://dashy.to/docs/configuring) and [other docs](https://dashy.to/docs).<br />
 

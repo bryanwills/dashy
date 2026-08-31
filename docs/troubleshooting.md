@@ -7,6 +7,15 @@
 
 ## Contents
 
+- [Config not loading](#config-not-loading)
+  - [You see the default dashboard instead of yours](#you-see-the-default-dashboard-instead-of-yours)
+  - [Failed to fetch configuration, status 404](#failed-to-fetch-configuration-server-responded-with-status-404)
+  - [Config came back after a permissions fix, but auth is ignored](#config-came-back-after-a-permissions-fix-but-auth-is-ignored)
+  - [Edits on the host never reach the container](#edits-on-the-host-never-reach-the-container)
+  - [Your browser shows an old config](#your-browser-shows-an-old-config)
+  - [Empty dashboard with "Login" in the title](#empty-dashboard-with-login-in-the-title)
+  - [Static hosting ignores config changes](#static-hosting-ignores-config-changes)
+  - [Nothing loads when Dashy is behind a sub-path](#nothing-loads-when-dashy-is-behind-a-sub-path)
 - [Config not saving](#config-not-saving)
   - [Permission denied or read-only filesystem](#permission-denied-or-read-only-filesystem-eacces-erofs)
   - [Kubernetes ConfigMap mount is read-only](#kubernetes-configmap-mount-is-read-only)
@@ -34,6 +43,7 @@
   - [Remote Config Not Loading](#remote-config-not-loading)
 - [Build & memory errors](#build--memory-errors)
   - [Yarn Build or Run Error](#yarn-error)
+  - [The engine "node" is incompatible with this module](#the-engine-node-is-incompatible-with-this-module)
   - [`yarn build` fails inside the container](#yarn-build-fails-inside-the-container)
   - [High CPU or RAM Usage on Startup](#high-cpu-or-ram-usage-on-startup)
   - [Heap limit Allocation failed](#ineffective-mark-compacts-near-heap-limit-allocation-failed)
@@ -62,6 +72,7 @@
   - [Mount Type Mismatch](#mount-type-mismatch)
   - [DockerHub toomanyrequests](#dockerhub-toomanyrequests)
   - [Old image tags fail to pull](#old-image-tags-fail-to-pull)
+  - [no matching manifest for linux/arm/v7 (32-bit ARM)](#no-matching-manifest-for-linuxarmv7)
   - [Healthcheck Failing in Docker](#healthcheck-failing-in-docker)
   - [Docker Login Fails on Ubuntu](#docker-login-fails-on-ubuntu)
 - [Styles and Assets not Updating](#styles-and-assets-not-updating)
@@ -88,6 +99,79 @@
 
 ---
 
+## Config not loading
+
+The server reads `conf.yml` from `user-data/` on each request (that's `/app/user-data/` on Docker), which Dashy serves to the base of the domain (like `[your-dashy-instance]/conf.yml`). If you forget to pass in a config, or you put it in the wrong place, you'll see the default Dashy config.
+
+### You see the default dashboard instead of yours
+
+If the page reads "Welcome to your new dashboard!" with a Getting Started section, Dashy is serving the `conf.yml` that ships inside the image. Yours is mounted to the wrong place.
+
+Since v3.0.0 the config lives at `/app/user-data/conf.yml` (NOT `/app/public/conf.yml`)
+
+```bash
+docker run -d -p 8080:8080 -v ~/dashy/user-data:/app/user-data lissy93/dashy:latest
+```
+
+To see what the container is actually reading: `docker exec -it dashy head /app/user-data/conf.yml`
+
+### "Failed to fetch configuration: Server responded with status 404"
+
+`/app/user-data` is there, but it has no `conf.yml` in it. Usually a host directory got mounted over the top and is empty, or the file is named something else. The name of the root config has to be exactly `conf.yml`.
+
+A file that exists but can't be read by uid 1000 gives the same 404, so check [permissions](#permission-denied-or-read-only-filesystem-eacces-erofs) if the path looks right.
+
+Put the file in place before starting the container:
+
+```bash
+mkdir -p ~/dashy/user-data
+cp conf.yml ~/dashy/user-data/conf.yml
+```
+
+### Config came back after a permissions fix, but auth is ignored
+
+Restart the container after fixing permissions, even though the dashboard already looks repaired. Because auth is resolved once at startup, while `conf.yml` is re-read on every request. See [Permission denied or read-only filesystem](#permission-denied-or-read-only-filesystem-eacces-erofs) for the ownership side, including Synology, NAS and SELinux cases.
+
+```bash
+sudo chown -R 1000:1000 ~/dashy/user-data
+docker restart dashy
+```
+
+### Edits on the host never reach the container
+
+You changed `conf.yml`, restarted, and nothing moved. This is the classic single-file bind mount problem. Most editors save by writing a new file and renaming it over the old one, which breaks the mount's link to the original inode.
+
+Mount the parent directory rather than the file:
+
+```yaml
+volumes:
+  - ./user-data:/app/user-data
+```
+
+Also check the host side is a real path. A bare name with no `/` or `./` in front is a named volume, not a bind mount.
+
+### Your browser shows an old config
+
+Try opening in a private window, do you see the new one now? If so, this is some local settings you've set. Just clear it from Dashy's config menu under Config --> "Reset Local Settings". See [How to Reset Local Settings](#how-to-reset-local-settings).
+
+If the private window is stale too, and you have `appConfig.enableServiceWorker: true`, the PWA cache is serving an old copy. Unregister the worker under the Application tab in devtools, then reload.
+
+### Empty dashboard with "Login" in the title
+
+This one is intentional. With auth configured and no session yet, the server sends a cut-down config containing only what the login screen needs. Your sections come back once you're signed in. If you do sign in and it's still empty, the problem is auth rather than config. See [Auth & OIDC](#auth--oidc).
+
+### Static hosting ignores config changes
+
+On Netlify, Vercel, GitHub Pages and similar there's no Dashy server, so `conf.yml` gets copied into `dist/` at build time. Editing it afterwards does nothing until you build again. Commit your change to `user-data/conf.yml` and let the host rebuild, or run `yarn build` locally.
+
+### Nothing loads when Dashy is behind a sub-path
+
+Serve Dashy at `example.com/dashy` and the browser still requests `example.com/conf.yml`. The config path is fixed at build time as `/conf.yml`, and `BASE_URL` doesn't apply to it, so a proxy forwarding only `/dashy/*` never sees the request.
+
+Give Dashy its own hostname or subdomain, or build from source with `VITE_APP_CONFIG_PATH` set to the full path. Any `VITE_` variable is read during the build, so setting one on the prebuilt Docker image won't do anything.
+
+---
+
 ## Config not saving
 
 There should be an error message, explaining the reason the config save failed. First check [browser console](#how-to-open-browser-console) (<kbd>F12</kbd> --> Console), and then your server-side logs in the terminal. Then, see the following sections for solutions to each possible error.
@@ -104,6 +188,8 @@ There should be an error message, explaining the reason the config save failed. 
 ### Permission denied or read-only filesystem (EACCES, EROFS)
 
 The container can't write to your `conf.yml` or its directory. Almost always an ownership mismatch: the host directory belongs to a different uid than the one Dashy runs as inside the container. Less commonly a read-only mount or an over-strict file mode.
+
+The `COPY --chown=node:node` in the Dockerfile only sets ownership *inside the image*. When you bind-mount `user-data`, your host directory takes over that path entirely, so its ownership is what counts - not the image's.
 
 Dashy runs as UID=1000 (default non-root node user). You can see this by running `docker exec -it dashy id`. Then, check who owns the user-data directory, with: `docker exec -it dashy ls -la /app/user-data` - if it's not `1000` then that's the issue. And the solution is just to run `sudo chown -R 1000:1000 /path/to/your/user-data` to set the right owner.
 
@@ -369,6 +455,17 @@ Alternatively, as a workaround, you have several options:
 - Try using [NPM](https://www.npmjs.com/get-npm) instead: So clone, cd, then run `npm install`, `npm run build` and `npm start`
 - Try using [Docker](https://www.docker.com/get-started) instead, and all of the system setup and dependencies will already be taken care of. So from within the directory, just run `docker build -t lissy93/dashy .` to build, and then use docker start to run the project, e.g: `docker run -it -p 8080:8080 lissy93/dashy` (see the [deploying docs](/docs/deployment#deploy-with-docker) for more info)
 
+### The engine "node" is incompatible with this module
+
+You'll see this error while running `yarn`, if your version of Node is too old or incompatible. 
+
+The solution is to upgrade to the latest LTS version of Node 24.
+Alternatively (not recommended), you can ignore this warning by running `yarn install --ignore-engines`.
+
+Dashy needs Node **`^22.18.0 || >=24.11.0`** - that's either the Node 22 LTS line at 22.18.0 or newer, or 24.11.0 or newer.
+Check your current version with `node --version`.
+The easiest way to do this, is to use a version manager, like [nvm](https://github.com/nvm-sh/nvm) to quickly download and apply different node versions. Run `nvm install 24` then `nvm use 24`.
+
 ### `yarn build` fails inside the container
 
 If you run `docker exec <container> yarn build` and get `vite: not found` (or similar), it's because the published image ships only production dependencies. The build toolchain (vite, vue-tsc, sass, etc.) lives in `devDependencies` and isn't installed in the runtime image.
@@ -528,6 +625,11 @@ Dashy's server is rejecting the id_token. Check Dashy's container logs for `[aut
 - **Dashy server can't reach Authentik**. The Dashy container fails to fetch the discovery document. Exec into the container and try `wget -qO- https://auth.example.com/application/o/dashy/.well-known/openid-configuration`
 - **Clock skew**. The middleware allows 30 seconds of drift. If a container's clock is further off than that, `exp`/`iat` checks fail
 
+If you've exhausted these and need a stop-gap, set `oidc.disableServerSideCheck: true` to skip server-side verification and fall back to client-side-only auth. This leaves Dashy's server routes unprotected, so only use it in a trusted environment (see the [OIDC docs](/docs/authentication/oidc)).
+
+### Sent back to the login page after a while
+Your SSO session's id_token expired, so Dashy signs you out (rather than leaving a logged-in-looking UI whose API calls all silently 401). For OIDC, set `oidc.enableSilentRenew: true` to refresh the session in the background before it lapses; this needs your provider to issue refresh tokens (Dashy adds the `offline_access` scope automatically when it's on). Otherwise, just sign in again when prompted.
+
 ### Logged in but no admin controls
 The id_token doesn't include the groups claim. Open browser devtools after logging in, find the call to `/application/o/dashy/userinfo/`, and check the response. You should see a `groups` array containing `dashy-admins`. If not:
 - The `groups` scope mapping doesn't exist, or is not attached to the provider's property mappings
@@ -624,13 +726,29 @@ You can [check your rate limit status](https://www.docker.com/blog/checking-your
 
 If `docker pull` returns `manifest unknown` or `manifest for lissy93/dashy:arm32v7 not found`, the cause is a stale architecture-specific tag in your compose file or run command. Tags like `:arm32v7`, `:arm64v8`, and `:multi-arch` are no longer published.
 
-The `:latest` tag is now multi-arch and works on amd64, arm64, and arm/v7 (Raspberry Pi 2 and up) without you having to pick a variant. Just use:
+The `:latest` tag is multi-arch and works on amd64 and arm64 without you having to pick a variant. Just use:
 
 ```yaml
 image: lissy93/dashy:latest
 ```
 
 Docker fetches the right architecture for your host automatically. To pin a version, use a semver tag, e.g. `lissy93/dashy:3.2.14`.
+
+### `no matching manifest for linux/arm/v7`
+
+Dashy's Docker image is built for `amd64` and `arm64` only (`4.4.10` was the last release to include a 32-bit `armv7` build). On a 32-bit ARM host (Raspberry Pi 2, or a Pi 3/4 running a 32-bit OS), `docker pull`, `docker run` or `docker compose up` fails with:
+
+```
+no matching manifest for linux/arm/v7 in the manifest list entries
+```
+
+(Pi 1 and Pi Zero report `linux/arm/v6`.) 32-bit ARM was dropped because the build toolchain (Rolldown) no longer ships a 32-bit ARM binary, and Node 24 dropped 32-bit ARM too. To fix it:
+
+- **Recommended:** reinstall your host OS as 64-bit (`arm64`). The Raspberry Pi 3 and newer all support it, and Dashy's `arm64` image is then selected automatically.
+- **Stay on 32-bit:** pin the last image that shipped `armv7`:
+  ```yaml
+  image: lissy93/dashy:4.4.10
+  ```
 
 ### Healthcheck Failing in Docker
 
@@ -703,7 +821,7 @@ If the URL you are checking has an unsigned certificate, or is not using HTTPS, 
 
 If your service is online, but responds with a status code that is not in the 2xx range, then you can use `statusCheckAcceptCodes` to set an accepted status code.
 
-If you get an error, like `Service Unavailable: Server resulted in a fatal error`, even when it's definitely online, this is most likely caused by missing the protocol. Don't forget to include `https://` (or whatever protocol) before the URL, and ensure that if needed, you've specified the port.
+If you get an error, like `Service Unavailable: Server resulted in Invalid URL`, even when it's definitely online, this is most likely caused by missing the protocol. Don't forget to include `https://` (or whatever protocol) before the URL, and ensure that if needed, you've specified the port.
 
 Running Dashy in HOST network mode, instead of BRIDGE will allow status check access to other services in HOST mode. For more info, see [#445](https://github.com/Lissy93/dashy/discussions/445).
 

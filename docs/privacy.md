@@ -1,4 +1,4 @@
-# Privacy & Security
+# Privacy
 
 Dashy was built with privacy in mind.
 Self-hosting your own apps and services is a great way to protect yourself from the mass data collection employed by big tech companies, and Dashy was designed to make self-hosting easier.
@@ -8,40 +8,34 @@ Dashy operates on the premise, that:
 - All code is 100% open source, clearly documented and intended to be easily auditable
 - Privacy-respecting by default. No premium features, analytics, tracking or ads
 
-This document outlines all network requests, data storage requirements, security configurations and data handling processes. 
+This document outlines all network requests, data storage requirements and data handling processes. See also the [security docs](/docs/security).
 
 > [!TIP]
 > Btw (shameless plug), if you care about your privacy, you might also like [awesome-privacy](https://github.com/Lissy93/awesome-privacy/)!<br />
 
 ## Contents
 
-- Privacy
-  - [Browser Storage](#browser-storage)
-  - [External Requests](#external-requests)
-    - [Icons](#icons)
-    - [Themes](#themes)
-    - [Status Checking](#status-checking)
-    - [Update Checks](#update-checks)
-    - [Cloud Backup](#cloud-backup)
-    - [Web Search](#web-search)
-    - [Initialization Page](#initialization-page)
-    - [Anonymous Error Reporting](#anonymous-error-reporting)
-    - [Widgets](#widgets)
-- Security
-  - [Dependencies](#dependencies)
-  - [Securing your Environment](#securing-your-environment)
-  - [Security Features](#security-features)
-  - [Threat Model](#threat-model)
-  - [Known Limitations](#known-limitations)
-  - [Update & Patch Policy](#update--patch-policy)
-  - [Reporting a Security Issue](#reporting-a-security-issue)
+- [Browser Storage](#browser-storage)
+- [Single Sign-On](#single-sign-on)
+- [External Requests](#external-requests)
+  - [Icons](#icons)
+  - [Themes](#themes)
+  - [Status Checking](#status-checking)
+  - [Update Checks](#update-checks)
+  - [Cloud Backup](#cloud-backup)
+  - [Web Search](#web-search)
+  - [Initialization Page](#initialization-page)
+  - [Anonymous Error Reporting](#anonymous-error-reporting)
+  - [Widgets](#widgets)
+  - [Proxied Requests](#proxied-requests)
+- [Server-Side Data](#server-side-data)
 
 ---
 
 ## Browser Storage
 
 In order for user preferences to be persisted some data is stored locally in your browsers storage.
-No personal info is kept here, none of this data can be accessed by other domains, no data is ever sent to any server without your prior consent, and all data is removed when no longer needed unless you delete it sooner.
+Aside from your username and login tokens (only when auth is enabled), no personal info is kept here. None of this data can be accessed by other domains, no data is ever sent to any server without your prior consent, and you can view or delete it at any time.
 
 The following section outlines all data that is stored in the browsers, as cookies, session storage or local storage.
 
@@ -50,41 +44,62 @@ The following section outlines all data that is stored in the browsers, as cooki
 > [Cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies) will expire after their pre-defined lifetime.
 > Dashy uses cookies for authentication, when enabled.
 
-- `AUTH_TOKEN` - A unique token, generated from a hash of users credentials, to verify they are authenticated. Only used when auth is enabled.
+- `dashyAuthToken` - A unique token, generated from a hash of users credentials, to verify they are authenticated. Only used when auth is enabled.
 
 ### Session Storage
 
 > [Session storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) is deleted when the current session ends (tab / window is closed).
-> Dashy uses session storage service worker status and error list.
+> Dashy uses session storage for the error log, and a few short-lived flags that prevent redirect loops.
 
-- `SW_STATUS` - The current status of any service workers
-- `ERROR_LOG` - List of recent errors
+- `errorLog` - List of recent errors
+- `dashy.oidc.signin-attempt` - Timestamp of the last SSO login attempt, prevents redirect loops
+- `dashy.oidc.silent-attempt` - Timestamp of the last silent token renewal, prevents renewal loops
+- `dashy.sub-config-reload-attempt` - Timestamp of the last config reload after re-authenticating
+- `dashy-auth-proxy-reloaded` - Flag so service worker changes only trigger one page refresh
 
 ### Local Storage
 
 > [Local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) is persisted between sessions, and only deleted when manually removed.
 > Dashy can use local storage to keep track of your preferences.
 
-- `LANGUAGE` - The locale to show app text in
-- `HIDE_INFO_NOTIFICATION` - Set to true once user dismissed welcome message, so that it's not shown again
-- `LAYOUT_ORIENTATION` - Preferred section layout, either auto, horizontal, vertical or masonry
-- `COLLAPSE_STATE` - Remembers which sections are collapsed
-- `ICON_SIZE` - Size of items, either small, medium or large
-- `THEME` - Users applied theme
-- `CUSTOM_COLORS` - Any color modifications made to a given theme
-- `BACKUP_ID` - If a backup has been made, the ID is stored here
-- `BACKUP_HASH` - A unique hash of the previous backups meta data
-- `HIDE_SETTINGS` - Lets user hide or show the settings menu
-- `USERNAME` - If user logged in, store username. Only used to show welcome message, not used for auth
-- `CONF_SECTIONS` - Array of sections, only used when user applies changes locally
-- `PAGE_INFO` - Config page info, only used when user applies changes locally
-- `APP_CONFIG` - App config, only used when user applies changes locally
-- `MOST_USED` - If smart sort is used to order items by most used, store open count
-- `LAST_USED` - If smart sort is used to order items by last used, store timestamps
+- `language` - The locale to show app text in
+- `hideWelcomeHelpers` - Set to true once user dismissed welcome message, so that it's not shown again
+- `layoutOrientation` - Preferred section layout, either auto, horizontal, vertical or masonry
+- `collapseState` - Remembers which sections are collapsed
+- `iconSize` - Size of items, either small, medium or large
+- `theme` - Users applied theme
+- `customColors` - Any color modifications made to a given theme
+- `backupId` - If a backup has been made, the ID is stored here
+- `backupHash` - A unique hash of the previous backups meta data
+- `hideSettings` - Lets user hide or show the settings menu
+- `username` - If user logged in, store username. Only used to show welcome message, not used for auth
+- `confSections` - Array of sections, only used when user applies changes locally
+- `confPages` - Array of additional pages, only used when user applies changes locally
+- `pageInfo` - Config page info, only used when user applies changes locally
+- `appConfig` - App config, only used when user applies changes locally
+- `mostUsed` - If smart sort is used to order items by most used, store open count
+- `lastUsed` - If smart sort is used to order items by last used, store timestamps
+- `disableCriticalWarning` - Set once user dismisses the config error warning, so it's not shown again
+- `isAdmin` - Whether the logged in user is an admin, used to show or hide config options in the UI
+- `keycloakInfo` - Your groups and roles from your SSO provider, used to determine which sections you can see
+- `idToken` - Your OIDC ID token, used to authenticate your requests to the server (see [Single Sign-On](#single-sign-on))
+- `oidc.user:...` - Your OIDC session, including tokens and basic profile info (see [Single Sign-On](#single-sign-on))
+
+### Service Worker Cache
+
+If you've enabled the service worker (with `appConfig.enableServiceWorker`), the app's assets are cached in your browser's cache storage, so Dashy loads faster and can work offline. This is just a copy of the app itself, not your data. It's disabled by default, and you can clear the cache in the same place as your other site data (see below).
 
 ### Deleting Stored Data
 
-You can manually view and delete session storage, local storage and cookies at anytime. First [open](/docs/troubleshooting#how-to-open-browser-console) your browsers developer tools (usually <kbd>F12</kbd>), then under the Application tab select the storage category. Here you will see a list of stored data, and you can select any item and delete it.
+You can manually view and delete session storage, local storage, cache storage and cookies at anytime. First [open](/docs/troubleshooting#how-to-open-browser-console) your browsers developer tools (usually <kbd>F12</kbd>), then under the Application tab select the storage category. Here you will see a list of stored data, and you can select any item and delete it.
+
+---
+
+## Single Sign-On
+
+If you've configured Keycloak or another OIDC provider, the login flow happens directly between your browser and your identity provider. No third parties are involved, and Dashy never sees or stores your password.
+
+After you log in, your tokens and some basic profile info (username, groups and roles) are kept in local storage, so you stay logged in between visits and the server can verify your requests. The exact keys are listed under [Local Storage](#local-storage) above. Logging out clears them all.
 
 ---
 
@@ -100,23 +115,31 @@ If either any of your sections, items or themes are using icons from font-awesom
 
 #### Material Design Icons
 
-If either any of your sections, items or themes are mdi icons, then it will be automatically enabled. But you can also manually enable or disable it by setting `appConfig.enableMaterialDesignIcons` to `true` / `false`. Requests are made directly to Material-Design-Icons CDN, for more info, see the [Material Design Icons Website](https://materialdesignicons.com/).
+If either any of your sections, items or themes are mdi icons, then it will be automatically enabled. But you can also manually enable or disable it by setting `appConfig.enableMaterialDesignIcons` to `true` / `false`. The icon font is loaded from the jsDelivr CDN, for more info, see the [jsDelivr Privacy Policy](https://www.jsdelivr.com/terms/privacy-policy).
 
 #### Favicon Fetching
 
 If an item's icon is set to `favicon`, then it will be auto-fetched from the corresponding URL. Since not all websites have their icon located at `/favicon.ico`, and if they do, it's often very low resolution (like `16 x 16 px`). Therefore, the default behavior is for Dashy to check if the URL is public, and if so will use an API to fetch the favicon. For self-hosted services, the favicon will be fetched from the default path, and no external requests will be made.
 
-The default favicon API is [allesedv.com](https://favicon.allesedv.com/), but this can be changed by setting `appConfig.faviconApi` to an alternate source (`iconhorse`, `faviconkit`, `besticon`, `duckduckgo`, `google` and `allesedv` are supported). If you do not want to use any API, then you can set this property to `local`, and the favicon will be fetched from the default path. For hosted services, this will still incur an external request.
+The default favicon API is [allesedv.com](https://favicon.allesedv.com/), but this can be changed by setting `appConfig.faviconApi` to an alternate source (`iconhorse`, `faviconkit`, `besticon`, `duckduckgo`, `yandex`, `google`, `webmasterapi`, `mcapi` and `allesedv` are supported). If you do not want to use any API, then you can set this property to `local`, and the favicon will be fetched from the default path. For hosted services, this will still incur an external request.
 
 #### Generative Icons
 
-If an item has the icon set to `generative`, then an external request it made to [Dice Bear](https://dicebear.com/) to fetch the uniquely generated icon. The URL of a given service is used as the key for generating the icon, but it is first hashed and encoded for basic privacy. For more info, please reference the [Dicebear Privacy Policy](https://avatars.dicebear.com/legal/privacy-policy)
+If an item has the icon set to `generative`, then an external request is made to [DiceBear](https://dicebear.com/) to fetch the uniquely generated icon. The URL of a given service is used as the key for generating the icon, but it is first hashed and encoded for basic privacy. For more info, please reference the [DiceBear Privacy Policy](https://www.dicebear.com/legal/privacy-policy/)
 
 As a fallback, if Dicebear fails, then [Evatar](https://evatar.io/) is used.
 
 #### Self-Hosted Icons
 
 If an item's icon uses the `sh-` prefix, icons are fetched from the [selfh.st icons](https://selfh.st/icons/) CDN at `https://cdn.jsdelivr.net/gh/selfhst/icons`. This only applies when you explicitly use the `sh-` prefix for an icon.
+
+#### Simple Icons
+
+If an item's icon uses the `si-` prefix, brand icons are fetched from [Simple Icons](https://simpleicons.org/), via the unpkg CDN at `https://unpkg.com/simple-icons`. This only applies when you explicitly use the `si-` prefix for an icon.
+
+#### Dashboard Icons
+
+If an item's icon uses the `hl-` prefix, icons are fetched from [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons), via the jsDelivr CDN. This only applies when you explicitly use the `hl-` prefix for an icon.
 
 #### Other Icons
 
@@ -182,13 +205,16 @@ Dashy supports [Widgets](/docs/widgets) for displaying dynamic content. Below is
 | | `http://ip-api.com/json` | [IP-API Privacy Policy](https://ip-api.com/docs/legal) |
 | | `https://api.ipgeolocation.io/ipgeo` | [IPGeoLocation Privacy Policy](https://ipgeolocation.io/privacy.html) |
 | [IP Blacklist](/docs/widgets#ip-blacklist) | `https://api.blacklistchecker.com` | [Blacklist Checker Privacy Policy](https://blacklistchecker.com/privacy) |
+| | `https://api.ipify.org` | [ipify](https://www.ipify.org/) |
 | [Domain Monitor](/docs/widgets#domain-monitor) | `https://api.whoapi.com` | [WhoAPI Privacy Policy](https://whoapi.com/privacy-policy/) |
 | [Crypto Watch List](/docs/widgets#crypto-watch-list) / [Token Price History](/docs/widgets#crypto-token-price-history) | `https://api.coingecko.com` | [CoinGecko Privacy Policy](https://www.coingecko.com/en/privacy) |
 | [Wallet Balance](/docs/widgets#wallet-balance) | `https://api.blockcypher.com/` | [BlockCypher Privacy Policy](https://www.blockcypher.com/privacy.html) |
+| | `https://www.bitcoinqrcodemaker.com` | [Bitcoin QR Code Maker](https://www.bitcoinqrcodemaker.com/) |
 | [Code::Stats](/docs/widgets#code-stats) | `https://codestats.net` | [Code::Stats Privacy Policy](https://codestats.net/tos#privacy) |
 | [addy.io](/docs/widgets#addyio) | `https://app.addy.io` | [addy.io Privacy Policy](https://addy.io/privacy/) |
 | [Vulnerability Feed](/docs/widgets#vulnerability-feed) | `https://services.nvd.nist.gov/rest/json/cves/2.0` | [NIST Privacy Policy](https://www.nist.gov/privacy-policy) |
 | [Exchange Rate](/docs/widgets#exchange-rates) | `https://v6.exchangerate-api.com` | [ExchangeRateAPI Privacy Policy](https://www.exchangerate-api.com/terms) |
+| | `https://raw.githubusercontent.com/Lissy93/currency-flags` | [GitHub's Privacy Policy](https://docs.github.com/en/github/site-policy/github-privacy-statement) |
 | [Public Holidays](/docs/widgets#public-holidays) | `https://kayaposoft.com` | [jurajmajer/enrico](https://github.com/jurajmajer/enrico) |
 | [Covid-19 Status](/docs/widgets#covid-19-status) | `https://disease.sh/v3/covid-19` | [disease-sh/api](https://github.com/disease-sh/api) |
 | [Sports Scores](/docs/widgets#sports-scores) | `https://thesportsdb.com` | No Policy Available |
@@ -196,155 +222,33 @@ Dashy supports [Widgets](/docs/widgets) for displaying dynamic content. Below is
 | [Mullvad Status](/docs/widgets#mullvad-status) | `https://am.i.mullvad.net` | [Mullvad Privacy Policy](https://mullvad.net/en/help/privacy-policy/) |
 | [TFL Status](/docs/widgets#tfl-status) | `https://api.tfl.gov.uk` | [TFL Privacy Policy](https://tfl.gov.uk/corporate/privacy-and-cookies/) |
 | [Stock Price History](/docs/widgets#stock-price-history) | `https://www.alphavantage.co` | [AlphaVantage Privacy Policy](https://www.alphavantage.co/privacy/) |
-| [ETH Gas Prices](/docs/widgets#eth-gas-prices) | `https://ethgas.watch` | [wslyvh/ethgaswatch](https://github.com/wslyvh/ethgaswatch) |
+| [ETH Gas Prices](/docs/widgets#eth-gas-prices) | `https://www.ethgastracker.com` | [EthGasTracker](https://www.ethgastracker.com/) |
 | [Joke](/docs/widgets#joke) | `https://v2.jokeapi.dev` | [SV443's Privacy Policy](https://sv443.net/privacypolicy/en) |
-| [Chuck Norris Jokes](/docs/widgets#chuck-norris-jokes) | `https://api.chucknorris.io` | No Policy Available |
-| [XKCD Comic](/docs/widgets#xkcd-comic) | `https://xkcd.vercel.app` | [XKCD](https://xkcd.com) |
+| [Chuck Norris Jokes](/docs/widgets#chuck-norris-quotes) | `https://api.chucknorris.io` | No Policy Available |
+| [XKCD Comic](/docs/widgets#xkcd-comics) | `https://xkcd.vercel.app` | [XKCD](https://xkcd.com) |
 | [Flight Data](/docs/widgets#flight-data) | `https://aerodatabox.p.rapidapi.com` | [AeroDataBox Privacy Policy](https://www.aerodatabox.com/#h.p_cxtiyzwf_wqd) |
-| [Astronomy Picture of the Day](/docs/widgets#astronomy-picture-of-the-day) | `https://apod.as93.net` | [NASA's Privacy Policy](https://www.nasa.gov/about/highlights/HP_Privacy.html) |
+| [Astronomy Picture of the Day](/docs/widgets#astronomy-picture-of-the-day) | `https://apod.as93.net` | [NASA's Privacy Policy](https://www.nasa.gov/privacy/) (via a proxy run by Dashy's author) |
 | [GitHub Trending](/docs/widgets#github-trending) | `https://trend.doforce.xyz` | No Policy Available |
-| [GitHub Profile Stats](/docs/widgets#github-profile-stats) | `https://github-readme-stats.vercel.app` | [GitHub's Privacy Policy](https://docs.github.com/en/github/site-policy/github-privacy-statement) |
+| [GitHub Profile Stats](/docs/widgets#github-profile-stats) | `https://api.github.com` | [GitHub's Privacy Policy](https://docs.github.com/en/github/site-policy/github-privacy-statement) |
 | [Healthchecks Status](/docs/widgets#healthchecks-status) | `https://healthchecks.io` | [Health-Checks Privacy Policy](https://healthchecks.io/privacy/) |
-| [Hacker News Trending](/docs/widgets#hacker-news-trending) | `https://hacker-news.firebaseio.com` | [Y Combinator Privacy Policy](https://www.ycombinator.com/legal#privacy) |
-| [Minecraft Server Status](/docs/widgets#minecraft-server-status) | `https://api.mcsrvstat.us` | No Policy Available |
-| [MVG](/docs/widgets#mvg) | `https://www.mvg.de/api/fib/v2/` | No Policy Available |
-| [RescueTime](/docs/widgets#rescue-time) | `https://www.rescuetime.com` | [RescueTime Privacy Policy](https://www.rescuetime.com/privacy) |
+| [Hacker News Trending](/docs/widgets#hackernews-trending) | `https://hacker-news.firebaseio.com` | [Y Combinator Privacy Policy](https://www.ycombinator.com/legal#privacy) |
+| [Minecraft Server Status](/docs/widgets#minecraft-server) | `https://api.mcsrvstat.us` | No Policy Available |
+| | `https://mc-heads.net` | [MC Heads](https://mc-heads.net/) |
+| [MVG Departure](/docs/widgets#mvg-departure) / [MVG Connection](/docs/widgets#mvg-connection) | `https://www.mvg.de/api/fib/v2/` | No Policy Available |
+| [RescueTime](/docs/widgets#rescuetime-overview) | `https://www.rescuetime.com` | [RescueTime Privacy Policy](https://www.rescuetime.com/privacy) |
 
 Note: There are also many widgets that connect to self-hosted services (such as Pi-hole, AdGuard, Glances, Nextcloud, Proxmox, Uptime Kuma, etc.). These only make requests to your own configured server addresses and do not contact any third-party services.
 
----
+### Proxied Requests
 
-## Dependencies
+Some widget requests are made by the Dashy server, rather than your browser. If a widget is set to use the proxy (with `useProxy: true`), the request is sent to your Dashy server, which forwards it on to the target and passes the response back. This is needed for services which don't allow cross-origin requests. It also means the target sees your server's IP address, not your browser's. Any headers you've configured for that widget are included in the forwarded request.
 
-As with most web projects, Dashy relies on several [dependencies](/docs/credits#dependencies).
-
-Dependencies can introduce security vulnerabilities, but since all these packages are open source any issues are usually very quickly spotted. Dashy is using Snyk for dependency security monitoring, and you can see [the latest report here](https://snyk.io/test/github/lissy93/dashy). If any issue is detected by Snyk, a note about it will appear at the top of the Readme, and will usually be fixed within 48 hours.
-
-Note that packages listed under `devDependencies` section are only used for building the project, and are not included in the production environment.
+Status checks and ping checks are also made from the server. If you don't use any of these features, you can disable the endpoints entirely by setting the `DISABLE_PROXY_ENDPOINTS=true` environment variable.
 
 ---
 
-## Securing your Environment
+## Server-Side Data
 
-There is very little complexity involved with Dashy, and therefore the attack surface is reasonably small, but it is still important to follow best practices for all your self-hosted apps:
+Everything the Dashy server stores is kept in your `user-data` directory: your config file(s), plus a timestamped copy of the previous config, saved to `user-data/config-backups` each time you update the config through the UI. If you don't want these backups, set the `DISABLE_CONFIG_BACKUPS=true` environment variable. Old backups aren't cleaned up automatically, so if you've removed something sensitive from your config, remember to clear them out too.
 
-- **Use SSL/HTTPS** for securing traffic in transit, see [Management Docs: SSL Certificates](/docs/management#ssl-certificates)
-- **Configure authentication** to prevent unauthorized access, see [Authentication Docs](/docs/authentication). For internet-facing instances, use [Keycloak](/docs/authentication#keycloak), [OIDC](/docs/authentication#oidc), or an [alternative server-side method](/docs/authentication#alternative-authentication-methods)
-- **Place behind a reverse proxy** if exposing to the internet, see [Management Docs: Network Exposure](/docs/management#network-exposure)
-- **Harden your containers** if running in Docker, see [Management Docs: Container Security](/docs/management#container-security)
-- **Keep Dashy and your system up-to-date** to ensure known vulnerabilities are patched
-- **Configure firewall rules** to restrict access to only necessary ports and networks
-- **Use a VPN** for private access without exposing Dashy to the public internet
-- **Follow [Docker security best practices](https://docs.docker.com/engine/security/)** including running as non-root, limiting capabilities, and using read-only volumes
-
----
-
-## Security Features
-
-### Subresource Integrity
-
-[Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) or SRI is a security feature that enables browsers to verify that resources they fetch are delivered without unexpected manipulation. It works by allowing you to provide a cryptographic hash that a fetched resource must match. This prevents the app from loading any resources that have been manipulated, by verifying the files hashes. It safeguards against the risk of an attacker injecting arbitrary malicious content into any files served up via a CDN.
-
-Dashy supports SRI, and it is recommended to enable this if you are hosting your dashboard via a public CDN. To enable SRI, set the `INTEGRITY` environmental variable to `true`.
-
-### SSL
-
-Native SSL support is enabled, for setup instructions, see the [Management Docs](/docs/management#ssl-certificates)
-
-### Authentication
-
-Dashy supports built-in auth, server-based SSO using Keycloak or any OIDC provider, and header-based authentication for reverse proxy setups. Full details of which, along with alternate authentication methods can be found in the [Authentication Docs](/docs/authentication). If your dashboard is exposed to the internet and/ or contains any sensitive info it is strongly recommended to configure access control with Keycloak, OIDC, or another server-side method.
-
-### Configuration Lockdown
-
-Dashy provides several options to restrict what users can modify:
-
-- `appConfig.preventWriteToDisk` - Prevents config changes from being saved to the server
-- `appConfig.preventLocalSave` - Prevents config changes from being saved to browser storage
-- `appConfig.disableConfiguration` - Hides the config UI from all users
-- `appConfig.disableConfigurationForNonAdmin` - Hides the config UI for non-admin users
-
-These can be combined with the `admin` and `normal` user roles to give fine-grained control. Admin users can save config changes, while normal users have read-only access. For more details, see the [Authentication Docs: Permissions](/docs/authentication#permissions).
-
-### Disabling Features
-
-You may wish to disable features that you don't want to use, if they involve storing data in the browser or making network requests.
-- To disable smart-sort (uses local storage), set `appConfig.disableSmartSort: true`
-- To disable update checks (makes external request to GH), set `appConfig.disableUpdateChecks: true`
-- To disable web search (redirect to external / internal content), set `appConfig.webSearch.disableWebSearch: true`
-- To keep status checks disabled (external / internal requests), set `appConfig.statusCheck: false`
-- To keep ping checks disabled (external / internal requests), set `appConfig.pingCheckEnabled: false`
-- To keep font-awesome icons disabled (external requests), set `appConfig.enableFontAwesome: false`
-- To keep error reporting disabled (external requests and data collection), set `appConfig.enableErrorReporting: false`
-- To keep the service worker disabled (stores cache of app in browser data), set `appConfig.enableServiceWorker: false`
-
----
-
-## Threat Model
-
-Dashy is a statically-hosted dashboard application, designed to be self-hosted on a private network. This threat model outlines the intended deployment context, trust boundaries, known risks and accepted trade-offs, to help users assess whether Dashy is appropriate for their environment.
-
-### Intended Deployment
-
-Dashy is designed to run on a **private local network** (e.g. a home lab), accessed by a **small number of trusted users**. It is a convenience tool for organizing links to self-hosted services - it is not designed to protect sensitive resources or act as an access control layer.
-
-If exposed to the internet, Dashy **must** be placed behind a reverse proxy with server-side authentication (e.g. Authelia, Authentik, Cloudflare Access). The built-in client-side auth is a convenience feature for private networks, not a security boundary.
-
-### Trust Boundaries
-
-| Boundary | Trusted Side | Untrusted Side |
-|---|---|---|
-| Local network | LAN users, self-hosted services | The public internet |
-| Config file (`conf.yml`) | Server admin who writes the config | End users who view the dashboard |
-| Browser storage | The current browser session | Other domains, other users of the same device |
-| CORS proxy / status checks | Configured target URLs (set by admin) | Arbitrary URLs (if auth is not enabled) |
-
-### Assets
-
-| Asset | Description | Storage |
-|---|---|---|
-| Dashboard configuration | Service URLs, section layout, app settings | `conf.yml` on server, optionally cached in browser localStorage |
-| User credentials | SHA-256 password hashes, Keycloak/OIDC client IDs | `conf.yml` on server |
-| API keys | Keys for widget services (weather, stocks, etc.) | `conf.yml` on server or environment variables |
-| Auth tokens | Session token derived from credentials | Browser cookie (`dashyAuthToken`) |
-| User preferences | Theme, layout, language, collapsed sections | Browser localStorage |
-
-### When Dashy is NOT the Right Choice
-
-- You need a **multi-tenant** dashboard with per-user audit trails
-- You are deploying on the **public internet without a reverse proxy**
-- Your dashboard contains **secrets or credentials** that must be protected from all users who can reach the server
-- You require **FIPS-compliant** or **SOC 2** certified software
-
----
-
-## Known Limitations
-
-| Report | Response |
-|---|---|
-| "Client-side auth can be bypassed via browser dev tools" | Correct (only if neither `ENABLE_HTTP_AUTH` is set, nor any other auth mode). Client-side auth is a convenience for private networks, not a security boundary. Use server-side auth for untrusted environments. |
-| "CORS proxy can make requests to internal services" | Correct. The CORS proxy is designed to reach services on your network. It is protected by auth middleware when auth is enabled. Do not expose Dashy without auth on an untrusted network. |
-| "Status checks can be used for SSRF" | Status check target URLs are set by the server admin in `conf.yml`, not by end users. If auth is enabled, the endpoint is protected. |
-| "Password hashes are stored in plaintext in conf.yml" | They are SHA-256 hashes, not plaintext passwords. The config file should be readable only by the server admin, and protected by HTTP auth when served. |
-| "localStorage/cookies are not encrypted" | Browser storage is scoped to the origin and inaccessible to other domains. On a shared device, use your browser's profile isolation. |
-| "No CSRF protection" | Dashy's state-changing operations (config save) are protected by auth middleware. CSRF is a low risk on a private network dashboard. |
-| "Docker container runs as root" | The container is sandboxed. For hardened deployments, override with `--user` flag or configure in your Docker Compose file as described in the [container security docs](/docs/management#container-security). |
-| "Auth cookie is not HttpOnly/Secure" | The token is needed by client-side JavaScript for auth state. On a private network over plain HTTP, the `Secure` flag would break auth. Use HTTPS + a reverse proxy to add these flags if needed. |
-| "Iframe/embed widget can load arbitrary URLs" | The widget config is written by the server admin, not end users. If you don't trust your config authors, disable the config editor with `disableConfiguration`. |
-| "RSS widget renders HTML content" | RSS content is sanitized with DOMPurify before rendering. Script tags, event handlers and other dangerous elements are stripped. |
-| "No Content-Security-Policy headers" | CSP should be configured at the reverse proxy layer, since the correct policy depends on which widgets and icon CDNs you use. Dashy can't set a universal CSP that works for all configurations. |
-| "Config backups are not encrypted at rest" | Backups are stored server-side alongside the original config. If an attacker has filesystem access, they already have `conf.yml`. Encryption at rest is the responsibility of the host OS/volume. |
-| "No rate limiting on endpoints" | Rate limiting should be applied at the reverse proxy layer, where it can be tuned per-deployment. Dashy is not designed to be directly exposed to untrusted traffic. |
-
----
-
-## Update & Patch Policy
-
-We follow Semantic Versioning for all releases. Security fixes are shipped as patch releases as quickly as possible and are published via immutable Git tags and Docker image tags. Users are encouraged to pin to a specific version in production and monitor releases on GitHub for security updates. The `:latest` Docker tag is provided for convenience but should not be relied on in production environments.
-
----
-
-## Reporting a Security Issue
-
-Please see our [Security.md](https://github.com/Lissy93/dashy/?tab=security-ov-file) doc for how to report issues.
-We have an actively monitored security mailbox supporting PGP, as well as a GitHub Advisories vulnerability reporting program.
+There are no access logs, no analytics and no telemetry. The server prints some status info to the console, but doesn't write any log files.

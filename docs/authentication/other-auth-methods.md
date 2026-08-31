@@ -31,7 +31,7 @@ See the [Authelia docs](https://www.authelia.com/docs/) for the full setup guide
 
 **Authentik** is heavier but gives you a proper admin UI, built-in OIDC/SAML support, and user self-service (password resets, enrollment flows, etc). Good if you want a single identity provider across many apps. See the [authentik Docker Compose install](https://docs.goauthentik.io/docs/installation/docker-compose) to get started, and the [authentik guide](/docs/authentik) for Dashy-specific OIDC config.
 
-**OAuth2 Proxy** ([docs](https://oauth2-proxy.github.io/oauth2-proxy/)) is a thin forward-auth layer that puts any OIDC or OAuth2 provider (Google, GitHub, your own IdP) in front of apps that can't do it themselves. Point it at Dashy's [header auth](/docs/header-auth) and it forwards the authenticated username, so you get provider login without Dashy needing to reach the provider directly.
+**OAuth2 Proxy** ([docs](https://oauth2-proxy.github.io/oauth2-proxy/)) is a thin forward-auth layer that puts any OIDC or OAuth2 provider (Google, GitHub, your own IdP) in front of apps that can't do it themselves. Point it at Dashy's [header auth](/docs/header-auth) and it forwards the authenticated username, so you get provider login without Dashy needing to reach the provider directly. See the [oauth2-proxy example](/docs/header-auth#example-oauth2-proxy-and-nginx) for the full nginx setup.
 
 ## Zero-trust tunnels
 

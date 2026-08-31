@@ -359,6 +359,8 @@ When Dashy runs in server mode (the default Docker setup), it exposes several AP
 
 The CORS proxy (`/cors-proxy`) is worth calling out specifically: it forwards requests from the Dashy server to external URLs, so widgets can reach APIs that don't set CORS headers. On a private network this is harmless, but on an internet-exposed instance without auth, it could be abused as an open proxy. Always enable authentication if your instance is reachable from untrusted networks.
 
+If you don't use widgets or status checks, you can disable the endpoints which make outbound requests (`/status-check`, `/ping-check` and `/cors-proxy`) entirely, by setting the `DISABLE_PROXY_ENDPOINTS=true` environmental variable. They will then respond with a 403 error, and never make an external request.
+
 ****[⬆️ Back to Top](#)****
 
 ---
